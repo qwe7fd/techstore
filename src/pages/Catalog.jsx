@@ -9,7 +9,7 @@ const Catalog = () => {
         <div className="min-h-screen bg-gray-50">
           <div className="container mx-auto py-8 px-4 lg:px-8">
             <div className="mb-8">
-              <h1 className="mb-2">Premium Electronics</h1>
+              <h1 className="mb-2 text-2xl">Premium Electronics</h1>
               <p className="text-gray-600">Discover our curated collection of high-quality tech products</p>
             </div>
           </div>
