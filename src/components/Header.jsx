@@ -8,7 +8,7 @@ const Header = () => {
           href="/" 
           className="flex items-center gap-2"
         >
-          <div className="w-10 h-10 bg-linear-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center font-bold text-xl text-white">
+          <div className="w-10 h-10 bg-linear-to-br from-blue-600 to-purple-600 rounded-[10px] flex items-center justify-center font-bold text-xl text-white">
             T
           </div>
           <span className="hidden sm:inline-block text-xl font-bold">TechStore</span>
@@ -33,6 +33,7 @@ const Header = () => {
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#000000" strokeLinecap="round" strokeLinejoin="round" id="Shopping-Cart--Streamline-Lucide" height={20} width={20} >
             <path d="M7 21a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" strokeWidth={2} /><path d="M18 21a1 1 0 1 0 2 0 1 1 0 1 0 -2 0" strokeWidth={1.5} /><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95 -1.57l1.65 -7.43H5.12" strokeWidth={1.5} />
           </svg>
+          {/*TODO: Иконка корзины с индикатором количества товаров (Badge). Счетчик обновляется в реальном времени при добавлении/удалении позиций. */}
         </a>
       </div>
       </div>

@@ -12,6 +12,20 @@ const Catalog = () => {
               <h1 className="mb-2 text-2xl">Premium Electronics</h1>
               <p className="text-gray-600">Discover our curated collection of high-quality tech products</p>
             </div>
+
+            <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex items-center gap-2">
+                <button className="hidden"></button>
+                <p className="text-sm text-gray-600">{/* TODO: Display product count */}X products</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span class="text-sm text-gray-600">Sort by:</span>
+                <label htmlFor="products-sort"></label>
+                <select id="products-sort">
+                  <option value=""></option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
       </main>
