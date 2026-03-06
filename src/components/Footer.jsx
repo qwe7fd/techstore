@@ -2,7 +2,7 @@
 
 const Footer = () => {
   return (
-    <footer className="w-full border-t bg-gray-50">
+    <footer className="w-full border-t border-gray-200 bg-gray-50">
       <div className="container mx-auto py-12 px-4 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
           <div>
@@ -65,14 +65,15 @@ const Footer = () => {
             </form>
           </div>
         </div>
-      </div>
-      <div className="border-t mt-12 pt-8 text-center text-sm text-gray-600">
+              <div className="border-t border-gray-200 mt-12 pt-8 text-center text-sm text-gray-600">
         <p>&copy; 2026 TechStore. All rights reserved.</p>
         <div className="mt-2 flex justify-center gap-4">
           <a href="#" className="hover:text-blue-600">Privacy Policy</a>
           <a href="#" className="hover:text-blue-600">Terms of Service</a>
           <a href="#" className="hover:text-blue-600">Cookie Policy</a>
         </div>
+      </div>
+
       </div>
     </footer>
   )
