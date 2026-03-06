@@ -30,6 +30,40 @@ const Footer = () => {
               </a>
             </div>
           </div>
+
+          <div>
+            <h3 className="mb-4 font-semibold text-lg">Quick Links</h3>
+            <ul className="text-sm text-gray-600 space-y-2">
+              <li><a href="#" className="hover:text-blue-600">Shop All Products</a></li>
+              <li><a href="#" className="hover:text-blue-600">Special Deals</a></li>
+              <li><a href="#" className="hover:text-blue-600">About Us</a></li>
+              <li><a href="#" className="hover:text-blue-600">Contact Support</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="mb-4 font-semibold">Customer Service</h3>
+            <ul className="text-sm text-gray-600">
+              <li><a href="#" className="hover:text-blue-600">Shipping Information</a></li>
+              <li><a href="#" className="hover:text-blue-600">Return & Exchanges</a></li>
+              <li><a href="#" className="hover:text-blue-600">FAQ</a></li>
+              <li><a href="#" className="hover:text-blue-600">Track Order</a></li>
+            </ul>
+            <div className="mt-4 text-sm text-gray-600">
+              <p className="mb-1">Customer Support</p>
+              <p className="font-semibold text-black">1-800-TECH-SHOP</p>
+              <p>support@techstore.com</p>
+            </div>
+          </div>
+
+          <div>
+            <h3 className="font-semibold mb-4">Newsletter</h3>
+            <p className="text-sm text-gray-600 mb-4">Subscribe to get special offers, free giveaways, and updates.</p>
+            <form className="space-y-2">
+              <input className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200/60" type="email" placeholder="Enter your email" />
+              <button type="submit" class="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 transition-colors">Subscribe</button>
+            </form>
+          </div>
         </div>
       </div>
       <div className="border-t mt-12 pt-8 text-center text-sm text-gray-600">
