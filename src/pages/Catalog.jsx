@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { SlidersHorizontal } from "lucide-react";
 
 const Catalog = () => {
   const [sortBy, setSortBy] = useState("name-asc");
@@ -89,6 +90,15 @@ const Catalog = () => {
                   )}
                 </div>
               </div>
+            </div>
+
+            <div className="flex gap-8">
+              <aside className="hidden lg:block w-64 shrink-0 sticky top-24 rounded-lg border border-gray-200 bg-white p-6">
+                <h2 className="mb-6 text-lg font-semibold">
+                  <SlidersHorizontal />
+                  Filters
+                </h2>
+              </aside>
             </div>
           </div>
         </div>
