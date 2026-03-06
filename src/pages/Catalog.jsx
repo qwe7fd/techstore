@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { SlidersHorizontal } from "lucide-react";
+import { ChevronDown, Check } from "lucide-react";
 
 const Catalog = () => {
   const [sortBy, setSortBy] = useState("name-asc");
@@ -51,15 +52,7 @@ const Catalog = () => {
                     className="flex w-45 items-center justify-between rounded-md bg-white px-3 py-2 text-sm text-gray-900"
                   >
                     <span>{selectedOption?.label}</span>
-                    <svg 
-                      className="h-4 w-4 text-gray-500 transition-transform opacity-50"
-                      fill="none" 
-                      stroke="currentColor" 
-                      viewBox="0 0 24 24"
-                      strokeWidth={2}
-                    >
-                      <path d="m6 9 6 6 6-6"></path>                    
-                    </svg>
+                    <ChevronDown className="opacity-50 size-4"/>
                   </button>
                   
                   {isOpen && (
@@ -75,14 +68,7 @@ const Catalog = () => {
                         >
                           <span className="font-medium">{option.label}</span>
                           {sortBy === option.value && (
-                            <svg 
-                              className="h-5 w-5 text-gray-600 opacity-50" 
-                              fill="none" 
-                              stroke="currentColor" 
-                              viewBox="0 0 24 24"
-                            >
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
+                            <Check className="size-4 opacity-50"/>
                           )}
                         </button>
                       ))}

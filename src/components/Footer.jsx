@@ -65,8 +65,8 @@ const Footer = () => {
             </form>
           </div>
         </div>
-              <div className="border-t border-gray-200 mt-12 pt-8 text-center text-sm text-gray-600">
-        <p>&copy; 2026 TechStore. All rights reserved.</p>
+        <div className="border-t border-gray-200 mt-12 pt-8 text-center text-sm text-gray-600">
+          <p>&copy; 2026 TechStore. All rights reserved.</p>
         <div className="mt-2 flex justify-center gap-4">
           <a href="#" className="hover:text-blue-600">Privacy Policy</a>
           <a href="#" className="hover:text-blue-600">Terms of Service</a>
