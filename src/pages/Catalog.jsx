@@ -139,7 +139,7 @@ const Catalog = () => {
                           >
                             <div
                               ref={props.ref}
-                              className="h-4 w-full rounded-full"
+                              className="h-4 w-full rounded-none"
                               style={{
                                 background: getTrackBackground({
                                   values: priceRange,
@@ -153,13 +153,17 @@ const Catalog = () => {
                             </div>
                           </div>
                         )}
-                        renderThumb={({ props, index }) => (
-                          <div
-                            {...props}
-                            className="relative h-4 w-4 rounded-full border border-black bg-white shadow-sm focus:outline-none"
-                          >
-                          </div>
-                        )}
+                        renderThumb={({ props }) => {
+                          const { style, ...rest } = props;
+                          return (
+                            <div
+                              {...rest}
+                              style={{ ...style, cursor: "default" }}
+                              className="relative h-4 w-4 cursor-default rounded-full border border-black bg-white shadow-sm focus:outline-none after:absolute after:-inset-1.5 after:rounded-full after:bg-gray-400/30 after:opacity-0 after:transition-opacity hover:after:opacity-100"
+                            >
+                            </div>
+                          );
+                        }}
                       />
                       <div className="flex items-center justify-between text-sm text-gray-600">
                         <span>${priceRange[0]}</span>
