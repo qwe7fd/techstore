@@ -9,6 +9,7 @@ const Catalog = () => {
   const [sortBy, setSortBy] = useState("name-asc");
   const [isOpen, setIsOpen] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 3000]);
+  const [ratingFilters, setRatingFilters] = useState({ 5: false, 4: false, 3: false });
 
   const dropdownRef = useRef(null);
   const PRICE_MIN = 0;
@@ -33,6 +34,11 @@ const Catalog = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const clearFilters = () => {
+    setPriceRange([0, 3000]);
+    setRatingFilters({ 5: false, 4: false, 3: false });
+  }
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -95,7 +101,15 @@ const Catalog = () => {
                   <ul className="space-y-3 text-gray-700">
                     <li>
                       <label htmlFor="rating-5" className="flex cursor-pointer items-center gap-2 text-sm text-gray-700 select-none">
-                        <input id="rating-5" type="checkbox" className="peer sr-only opacity-50" />
+                        <input
+                          id="rating-5"
+                          type="checkbox"
+                          checked={ratingFilters[5]}
+                          onChange={(event) =>
+                            setRatingFilters((prev) => ({ ...prev, 5: event.target.checked }))
+                          }
+                          className="peer sr-only opacity-50"
+                        />
                         <span className="flex h-4 w-4 items-center justify-center rounded-sm border border-gray-300 bg-[#f3f3f5] transition-colors peer-checked:border-black peer-checked:bg-black peer-focus-visible:ring-2 peer-focus-visible:ring-black/40 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white [&>svg]:opacity-0 [&>svg]:transition-opacity peer-checked:[&>svg]:opacity-100">
                           <Check className="size-3.5 text-white" />
                         </span>
@@ -104,7 +118,15 @@ const Catalog = () => {
                     </li>
                     <li>
                       <label htmlFor="rating-4" className="flex cursor-pointer items-center gap-2 text-sm text-gray-700 select-none">
-                        <input id="rating-4" type="checkbox" className="peer sr-only" />
+                        <input
+                          id="rating-4"
+                          type="checkbox"
+                          checked={ratingFilters[4]}
+                          onChange={(event) =>
+                            setRatingFilters((prev) => ({ ...prev, 4: event.target.checked }))
+                          }
+                          className="peer sr-only"
+                        />
                         <span className="flex h-4 w-4 items-center justify-center rounded-sm border border-gray-300 bg-[#f3f3f5] transition-colors peer-checked:border-black peer-checked:bg-black peer-focus-visible:ring-2 peer-focus-visible:ring-black/40 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white [&>svg]:opacity-0 [&>svg]:transition-opacity peer-checked:[&>svg]:opacity-100">
                           <Check className="size-3.5 text-white" />
                         </span>
@@ -113,7 +135,15 @@ const Catalog = () => {
                     </li>
                     <li>
                       <label htmlFor="rating-3" className="flex cursor-pointer items-center gap-2 text-sm text-gray-700 select-none">
-                        <input id="rating-3" type="checkbox" className="peer sr-only" />
+                        <input
+                          id="rating-3"
+                          type="checkbox"
+                          checked={ratingFilters[3]}
+                          onChange={(event) =>
+                            setRatingFilters((prev) => ({ ...prev, 3: event.target.checked }))
+                          }
+                          className="peer sr-only"
+                        />
                         <span className="flex h-4 w-4 items-center justify-center rounded-sm border border-gray-300 bg-[#f3f3f5] transition-colors peer-checked:border-black peer-checked:bg-black peer-focus-visible:ring-2 peer-focus-visible:ring-black/40 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white [&>svg]:opacity-0 [&>svg]:transition-opacity peer-checked:[&>svg]:opacity-100">
                           <Check className="size-3.5 text-white" />
                         </span>
@@ -122,7 +152,7 @@ const Catalog = () => {
                     </li>
                   </ul>
 
-                  <div>
+                  <div className="mb-6">
                     <h3 className="mb-2 font-semibold text-lg">Price Range</h3>
                     <div className="space-y-3">
                       <Range
@@ -171,6 +201,12 @@ const Catalog = () => {
                       </div>
                     </div>
                   </div>
+
+                  <button 
+                    onClick={clearFilters}
+                    className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm hover:bg-gray-50 transition-colors">
+                    Clear All Filters
+                  </button>
                 </div>
               </aside>
             </div>
