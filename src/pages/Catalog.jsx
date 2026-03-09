@@ -80,10 +80,42 @@ const Catalog = () => {
 
             <div className="flex gap-8">
               <aside className="hidden lg:block w-64 shrink-0 sticky top-24 rounded-lg border border-gray-200 bg-white p-6">
-                <h2 className="mb-6 text-lg font-semibold">
-                  <SlidersHorizontal />
+                <h2 className="mb-6 font-semibold flex items-center gap-2 text-[20px]">
+                  <SlidersHorizontal className="h-5 w-5"/>
                   Filters
                 </h2>
+                <div className="space-y-6">
+                  <h3 className="mb-4 font-semibold text-lg">Rating</h3>
+                  <ul className="space-y-3 text-gray-700">
+                    <li>
+                      <label htmlFor="rating-5" className="flex cursor-pointer items-center gap-2 text-sm text-gray-700 select-none">
+                        <input id="rating-5" type="checkbox" className="peer sr-only opacity-50" />
+                        <span className="flex h-4 w-4 items-center justify-center rounded-sm border border-gray-300 bg-[#f3f3f5] transition-colors peer-checked:border-black peer-checked:bg-black peer-focus-visible:ring-2 peer-focus-visible:ring-black/40 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white [&>svg]:opacity-0 [&>svg]:transition-opacity peer-checked:[&>svg]:opacity-100">
+                          <Check className="size-3.5 text-white" />
+                        </span>
+                        <span>5+ Stars</span>
+                      </label>
+                    </li>
+                    <li>
+                      <label htmlFor="rating-4" className="flex cursor-pointer items-center gap-2 text-sm text-gray-700 select-none">
+                        <input id="rating-4" type="checkbox" className="peer sr-only" />
+                        <span className="flex h-4 w-4 items-center justify-center rounded-sm border border-gray-300 bg-[#f3f3f5] transition-colors peer-checked:border-black peer-checked:bg-black peer-focus-visible:ring-2 peer-focus-visible:ring-black/40 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white [&>svg]:opacity-0 [&>svg]:transition-opacity peer-checked:[&>svg]:opacity-100">
+                          <Check className="size-3.5 text-white" />
+                        </span>
+                        <span>4+ Stars</span>
+                      </label>
+                    </li>
+                    <li>
+                      <label htmlFor="rating-3" className="flex cursor-pointer items-center gap-2 text-sm text-gray-700 select-none">
+                        <input id="rating-3" type="checkbox" className="peer sr-only" />
+                        <span className="flex h-4 w-4 items-center justify-center rounded-sm border border-gray-300 bg-[#f3f3f5] transition-colors peer-checked:border-black peer-checked:bg-black peer-focus-visible:ring-2 peer-focus-visible:ring-black/40 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white [&>svg]:opacity-0 [&>svg]:transition-opacity peer-checked:[&>svg]:opacity-100">
+                          <Check className="size-3.5 text-white" />
+                        </span>
+                        <span>3+ Stars</span>
+                      </label>
+                    </li>
+                  </ul>
+                </div>
               </aside>
             </div>
           </div>
