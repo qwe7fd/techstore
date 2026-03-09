@@ -3,11 +3,17 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { SlidersHorizontal } from "lucide-react";
 import { ChevronDown, Check } from "lucide-react";
+import { Range, getTrackBackground } from "react-range";
 
 const Catalog = () => {
   const [sortBy, setSortBy] = useState("name-asc");
   const [isOpen, setIsOpen] = useState(false);
+  const [priceRange, setPriceRange] = useState([0, 3000]);
+
   const dropdownRef = useRef(null);
+  const PRICE_MIN = 0;
+  const PRICE_MAX = 3000;
+  const PRICE_STEP = 50;
 
   const sortOptions = [
     { value: "name-asc", label: "Name (A-Z)" },
@@ -115,6 +121,52 @@ const Catalog = () => {
                       </label>
                     </li>
                   </ul>
+
+                  <div>
+                    <h3 className="mb-2 font-semibold text-lg">Price Range</h3>
+                    <div className="space-y-3">
+                      <Range
+                        values={priceRange}
+                        step={PRICE_STEP}
+                        min={PRICE_MIN}
+                        max={PRICE_MAX}
+                        onChange={(values) => setPriceRange(values)}
+                        renderTrack={({ props, children }) => (
+                          <div
+                            onMouseDown={props.onMouseDown}
+                            onTouchStart={props.onTouchStart}
+                            className="flex h-9 w-full items-center px-2 mb-2"
+                          >
+                            <div
+                              ref={props.ref}
+                              className="h-4 w-full rounded-full"
+                              style={{
+                                background: getTrackBackground({
+                                  values: priceRange,
+                                  colors: ["#d1d5db", "#111111", "#d1d5db"],
+                                  min: PRICE_MIN,
+                                  max: PRICE_MAX
+                                })
+                              }}
+                            >
+                              {children}
+                            </div>
+                          </div>
+                        )}
+                        renderThumb={({ props, index }) => (
+                          <div
+                            {...props}
+                            className="relative h-4 w-4 rounded-full border border-black bg-white shadow-sm focus:outline-none"
+                          >
+                          </div>
+                        )}
+                      />
+                      <div className="flex items-center justify-between text-sm text-gray-600">
+                        <span>${priceRange[0]}</span>
+                        <span>${priceRange[1]}</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </aside>
             </div>
