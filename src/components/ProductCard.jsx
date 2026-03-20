@@ -1,9 +1,33 @@
 import { Star } from "lucide-react";
 
 const ProductCard = ({ name, image, category, price, rating }) => {
+  const renderStars = () => {
+    const stars = [];
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    
+    for (let i = 0; i < 5; i++) {
+      if (i < fullStars) {
+        stars.push(<Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />);
+      } else if (i === fullStars && hasHalfStar) {
+        stars.push(
+          <div key={i} className="relative">
+            <Star className="h-4 w-4 text-gray-300" />
+            <div className="absolute inset-0 overflow-hidden" style={{ width: '50%' }}>
+              <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+            </div>
+          </div>
+        );
+      } else {
+        stars.push(<Star key={i} className="h-4 w-4 text-gray-300" />);
+      }
+    }
+    return stars;
+  };
+
   return (
     <a
-      className="group block rounded-lg border border-gray-200 bg-white hover:shadow-lg transition-shadow"
+      className="group block overflow-hidden rounded-lg border border-gray-200 bg-white hover:shadow-lg transition-shadow"
       href="#"
     >
       <div className="aspect-square overflow-hidden bg-gray-100">
@@ -20,7 +44,7 @@ const ProductCard = ({ name, image, category, price, rating }) => {
         <div className="mb-3">
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-0.5">
-              <Star className="h-4 w-4"></Star>
+              {renderStars()}
             </div>
             <span className="text-sm text-gray-600">({rating})</span>
           </div>
