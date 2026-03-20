@@ -5,12 +5,15 @@ import Footer from "../components/Footer";
 import { SlidersHorizontal } from "lucide-react";
 import { ChevronDown, Check } from "lucide-react";
 import { Range, getTrackBackground } from "react-range";
+import { getProducts } from "../services/productsService";
 
 const Catalog = () => {
   const [sortBy, setSortBy] = useState("name-asc");
   const [isOpen, setIsOpen] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 3000]);
   const [ratingFilters, setRatingFilters] = useState({ 5: false, 4: false, 3: false });
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const dropdownRef = useRef(null);
   const PRICE_MIN = 0;
@@ -36,6 +39,21 @@ const Catalog = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const data = await getProducts();
+        setProducts(data);
+      } catch (error) {
+        console.error('Error loading products:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
   const clearFilters = () => {
     setPriceRange([0, 3000]);
     setRatingFilters({ 5: false, 4: false, 3: false });
@@ -55,7 +73,7 @@ const Catalog = () => {
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2">
                 <button className="hidden"></button>
-                <p className="text-sm text-gray-600">{/* TODO: Display product count */}X products</p>
+                <p className="text-sm text-gray-600">{products.length} products</p>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Sort by:</span>
@@ -212,14 +230,24 @@ const Catalog = () => {
               </aside>
 
               <div className="flex-1">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  <ProductCard></ProductCard>
-                  <ProductCard></ProductCard>
-                  <ProductCard></ProductCard>
-                  <ProductCard></ProductCard>
-                  <ProductCard></ProductCard>
-                  <ProductCard></ProductCard>
-                </div>
+                {loading ? (
+                  <div className="text-center py-12">
+                    <p className="text-gray-600">Loading products...</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {products.map((product) => (
+                      <ProductCard
+                        key={product.id}
+                        name={product.name}
+                        image={product.image}
+                        category={product.category}
+                        price={product.price}
+                        rating={product.rating}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
