@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "name": "Premium Wireless Headphones",
+    "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
+    "category": "Audio",
+    "price": 299.99,
+    "rating": 4.5,
+    "number_of_reviews": 327,
+    "highlights": {
+      "Battery Life": "40 hours",
+      "Connectivity": "Bluetooth 5.3",
+      "Noise Cancellation": "Active ANC"
+    },
+    "description": "Experience immersive audio with our premium wireless headphones. Featuring advanced noise cancellation, 40-hour battery life, and studio-quality sound. Perfect for music enthusiasts and professionals who demand the best audio experience.",
+    "specifications": {
+      "Battery Life": "40 hours",
+      "Connectivity":"Bluetooth 5.3",
+      "Noise Cancellation":"Active ANC",
+      "Driver Size": "40mm",
+      "Weight": "250g",
+      "Charging Time": "2 hours"
+    },
+    "related": [2,4]
+  }
+]
