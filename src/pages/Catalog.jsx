@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import Header from "../components/Header";
+import ProductCard from "../components/ProductCard";
 import Footer from "../components/Footer";
 import { SlidersHorizontal } from "lucide-react";
 import { ChevronDown, Check } from "lucide-react";
@@ -47,7 +48,7 @@ const Catalog = () => {
         <div className="min-h-screen bg-gray-50">
           <div className="container mx-auto py-8 px-4 lg:px-8">
             <div className="mb-8">
-              <h1 className="mb-2 text-2xl">Premium Electronics</h1>
+              <h1 className="mb-2 text-2xl font-medium">Premium Electronics</h1>
               <p className="text-gray-600">Discover our curated collection of high-quality tech products</p>
             </div>
 
@@ -98,7 +99,7 @@ const Catalog = () => {
                 </h2>
                 <div className="space-y-6">
                   <h3 className="mb-4 font-semibold text-lg">Rating</h3>
-                  <ul className="space-y-3 text-gray-700">
+                  <ul className="space-y-3">
                     <li>
                       <label htmlFor="rating-5" className="flex cursor-pointer items-center gap-2 text-sm text-gray-700 select-none">
                         <input
@@ -204,11 +205,22 @@ const Catalog = () => {
 
                   <button 
                     onClick={clearFilters}
-                    className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm hover:bg-gray-50 transition-colors">
+                    className="font-medium w-full rounded-lg border border-gray-300 px-4 py-2 text-sm hover:bg-gray-50 transition-colors">
                     Clear All Filters
                   </button>
                 </div>
               </aside>
+
+              <div className="flex-1">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  <ProductCard></ProductCard>
+                  <ProductCard></ProductCard>
+                  <ProductCard></ProductCard>
+                  <ProductCard></ProductCard>
+                  <ProductCard></ProductCard>
+                  <ProductCard></ProductCard>
+                </div>
+              </div>
             </div>
           </div>
         </div>
