@@ -3,7 +3,7 @@ import { ShoppingCart } from "lucide-react"
 
 const Header = () => {
   return (
-    <header className="sticky h-16 shadow-sm bg-white w-full">
+    <header className="sticky top-0 z-50 h-16 shadow-sm bg-white w-full">
       <div className="container h-full mx-auto px-4 lg:px-8 flex items-center justify-between">
         <a
           href="/" 

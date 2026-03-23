@@ -65,7 +65,7 @@ const Catalog = () => {
     <div className="flex min-h-screen flex-col">
       <Header />
       <main className="flex-1">
-        <div className="min-h-screen bg-gray-50">
+        <div className="bg-gray-50">
           <div className="container mx-auto py-8 px-4 lg:px-8">
             <div className="mb-8">
               <h1 className="mb-2 text-2xl font-medium">Premium Electronics</h1>
@@ -84,7 +84,7 @@ const Catalog = () => {
                     onClick={() => setIsOpen(!isOpen)}
                     className="flex w-45 items-center justify-between rounded-md bg-white px-3 py-2 text-sm text-gray-900"
                   >
-                    <span>{selectedOption?.label}</span>
+                    <span className="font-semibold">{selectedOption?.label}</span>
                     <ChevronDown className="opacity-50 size-4"/>
                   </button>
                   
@@ -112,7 +112,7 @@ const Catalog = () => {
             </div>
 
             <div className="flex gap-8">
-              <aside className="hidden lg:block w-64 shrink-0 sticky top-24 rounded-lg border border-gray-200 bg-white p-6">
+              <aside className="hidden lg:block w-64 shrink-0 sticky top-24 self-start rounded-lg border border-gray-200 bg-white p-6">
                 <h2 className="mb-6 font-semibold flex items-center gap-2 text-[20px]">
                   <SlidersHorizontal className="h-5 w-5"/>
                   Filters
