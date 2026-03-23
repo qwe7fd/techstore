@@ -59,7 +59,38 @@ const Catalog = () => {
     setRatingFilters({ 5: false, 4: false, 3: false });
   }
 
-  // TODO: make filters work, add expand filters button when screen becomes too narrow
+  const filteredAndSortedProducts = () => {
+    let result = [...products];
+
+    result = result.filter(product => 
+      product.price >= priceRange[0] && product.price <= priceRange[1]
+    );
+
+    const activeRatings = Object.keys(ratingFilters).filter(key => ratingFilters[key]);
+    if (activeRatings.length > 0) {
+      result = result.filter(product => {
+        return activeRatings.some(rating => product.rating >= Number(rating));
+      });
+    }
+
+    switch (sortBy) {
+      case "name-asc":
+        result.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "price-asc":
+        result.sort((a, b) => a.price - b.price);
+        break;
+      case "price-desc":
+        result.sort((a, b) => b.price - a.price);
+        break;
+      default:
+        break;
+    }
+
+    return result;
+  };
+
+  const displayedProducts = filteredAndSortedProducts();
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -75,7 +106,7 @@ const Catalog = () => {
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2">
                 <button className="hidden"></button>
-                <p className="text-sm text-gray-600">{products.length} products</p>
+                <p className="text-sm text-gray-600">{displayedProducts.length} products</p>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Sort by:</span>
@@ -238,7 +269,7 @@ const Catalog = () => {
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {products.map((product) => (
+                    {displayedProducts.map((product) => (
                       <ProductCard
                         key={product.id}
                         name={product.name}
