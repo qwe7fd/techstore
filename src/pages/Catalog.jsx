@@ -2,9 +2,9 @@ import { useState, useRef, useEffect } from "react";
 import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
 import Footer from "../components/Footer";
+import FiltersSidebar from "../components/FiltersSidebar";
 import { SlidersHorizontal } from "lucide-react";
 import { ChevronDown, Check } from "lucide-react";
-import { Range, getTrackBackground } from "react-range";
 import { getProducts } from "../services/productsService";
 
 const Catalog = () => {
@@ -14,11 +14,9 @@ const Catalog = () => {
   const [ratingFilters, setRatingFilters] = useState({ 5: false, 4: false, 3: false });
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   const dropdownRef = useRef(null);
-  const PRICE_MIN = 0;
-  const PRICE_MAX = 3000;
-  const PRICE_STEP = 50;
 
   const sortOptions = [
     { value: "name-asc", label: "Name (A-Z)" },
@@ -105,7 +103,13 @@ const Catalog = () => {
 
             <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex items-center gap-2">
-                <button className="hidden"></button>
+                <button 
+                  onClick={() => setIsFiltersOpen(true)}
+                  className="lg:hidden flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50 transition-colors"
+                >
+                  <SlidersHorizontal className="h-4 w-4"/>
+                  Filters
+                </button>
                 <p className="text-sm text-gray-600">{displayedProducts.length} products</p>
               </div>
               <div className="flex items-center gap-2">
@@ -143,123 +147,49 @@ const Catalog = () => {
             </div>
 
             <div className="flex gap-8">
-              <aside className="hidden lg:block w-64 shrink-0 sticky top-24 self-start rounded-lg border border-gray-200 bg-white p-6">
-                <h2 className="mb-6 font-semibold flex items-center gap-2 text-[20px]">
-                  <SlidersHorizontal className="h-5 w-5"/>
-                  Filters
-                </h2>
-                <div className="space-y-6">
-                  <h3 className="mb-4 font-semibold text-lg">Rating</h3>
-                  <ul className="space-y-3">
-                    <li>
-                      <label htmlFor="rating-5" className="flex cursor-pointer items-center gap-2 text-sm text-gray-700 select-none">
-                        <input
-                          id="rating-5"
-                          type="checkbox"
-                          checked={ratingFilters[5]}
-                          onChange={(event) =>
-                            setRatingFilters((prev) => ({ ...prev, 5: event.target.checked }))
-                          }
-                          className="peer sr-only opacity-50"
-                        />
-                        <span className="flex h-4 w-4 items-center justify-center rounded-sm border border-gray-300 bg-[#f3f3f5] transition-colors peer-checked:border-black peer-checked:bg-black peer-focus-visible:ring-2 peer-focus-visible:ring-black/40 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white [&>svg]:opacity-0 [&>svg]:transition-opacity peer-checked:[&>svg]:opacity-100">
-                          <Check className="size-3.5 text-white" />
-                        </span>
-                        <span>5+ Stars</span>
-                      </label>
-                    </li>
-                    <li>
-                      <label htmlFor="rating-4" className="flex cursor-pointer items-center gap-2 text-sm text-gray-700 select-none">
-                        <input
-                          id="rating-4"
-                          type="checkbox"
-                          checked={ratingFilters[4]}
-                          onChange={(event) =>
-                            setRatingFilters((prev) => ({ ...prev, 4: event.target.checked }))
-                          }
-                          className="peer sr-only"
-                        />
-                        <span className="flex h-4 w-4 items-center justify-center rounded-sm border border-gray-300 bg-[#f3f3f5] transition-colors peer-checked:border-black peer-checked:bg-black peer-focus-visible:ring-2 peer-focus-visible:ring-black/40 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white [&>svg]:opacity-0 [&>svg]:transition-opacity peer-checked:[&>svg]:opacity-100">
-                          <Check className="size-3.5 text-white" />
-                        </span>
-                        <span>4+ Stars</span>
-                      </label>
-                    </li>
-                    <li>
-                      <label htmlFor="rating-3" className="flex cursor-pointer items-center gap-2 text-sm text-gray-700 select-none">
-                        <input
-                          id="rating-3"
-                          type="checkbox"
-                          checked={ratingFilters[3]}
-                          onChange={(event) =>
-                            setRatingFilters((prev) => ({ ...prev, 3: event.target.checked }))
-                          }
-                          className="peer sr-only"
-                        />
-                        <span className="flex h-4 w-4 items-center justify-center rounded-sm border border-gray-300 bg-[#f3f3f5] transition-colors peer-checked:border-black peer-checked:bg-black peer-focus-visible:ring-2 peer-focus-visible:ring-black/40 peer-focus-visible:ring-offset-2 peer-focus-visible:ring-offset-white [&>svg]:opacity-0 [&>svg]:transition-opacity peer-checked:[&>svg]:opacity-100">
-                          <Check className="size-3.5 text-white" />
-                        </span>
-                        <span>3+ Stars</span>
-                      </label>
-                    </li>
-                  </ul>
-
-                  <div className="mb-6">
-                    <h3 className="mb-2 font-semibold text-lg">Price Range</h3>
-                    <div className="space-y-3">
-                      <Range
-                        values={priceRange}
-                        step={PRICE_STEP}
-                        min={PRICE_MIN}
-                        max={PRICE_MAX}
-                        onChange={(values) => setPriceRange(values)}
-                        renderTrack={({ props, children }) => (
-                          <div
-                            onMouseDown={props.onMouseDown}
-                            onTouchStart={props.onTouchStart}
-                            className="flex h-9 w-full items-center px-2 mb-2"
-                          >
-                            <div
-                              ref={props.ref}
-                              className="h-4 w-full rounded-none"
-                              style={{
-                                background: getTrackBackground({
-                                  values: priceRange,
-                                  colors: ["#d1d5db", "#111111", "#d1d5db"],
-                                  min: PRICE_MIN,
-                                  max: PRICE_MAX
-                                })
-                              }}
-                            >
-                              {children}
-                            </div>
-                          </div>
-                        )}
-                        renderThumb={({ props }) => {
-                          const { style, ...rest } = props;
-                          return (
-                            <div
-                              {...rest}
-                              style={{ ...style, cursor: "default" }}
-                              className="relative h-4 w-4 cursor-default rounded-full border border-black bg-white shadow-sm focus:outline-none after:absolute after:-inset-1.5 after:rounded-full after:bg-gray-400/30 after:opacity-0 after:transition-opacity hover:after:opacity-100"
-                            >
-                            </div>
-                          );
-                        }}
+              {isFiltersOpen && (
+                <div className="fixed inset-0 z-50 lg:hidden">
+                  <div 
+                    className="absolute inset-0 bg-black/50"
+                    onClick={() => setIsFiltersOpen(false)}
+                  />
+                  <div className="absolute inset-y-0 left-0 w-80 max-w-[85vw] bg-white shadow-xl overflow-y-auto">
+                    <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+                      <h2 className="font-semibold flex items-center gap-2 text-lg">
+                        <SlidersHorizontal className="h-5 w-5"/>
+                        Filters
+                      </h2>
+                      <button
+                        onClick={() => setIsFiltersOpen(false)}
+                        className="text-gray-500 hover:text-gray-700"
+                      >
+                        <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className="p-6">
+                      <FiltersSidebar
+                        priceRange={priceRange}
+                        setPriceRange={setPriceRange}
+                        ratingFilters={ratingFilters}
+                        setRatingFilters={setRatingFilters}
+                        clearFilters={clearFilters}
+                        showTitle={false}
                       />
-                      <div className="flex items-center justify-between text-sm text-gray-600">
-                        <span>${priceRange[0]}</span>
-                        <span>${priceRange[1]}</span>
-                      </div>
                     </div>
                   </div>
-
-                  <button 
-                    onClick={clearFilters}
-                    className="font-medium w-full rounded-lg border border-gray-300 px-4 py-2 text-sm hover:bg-gray-50 transition-colors">
-                    Clear All Filters
-                  </button>
                 </div>
+              )}
+
+              <aside className="hidden lg:block w-64 shrink-0 sticky top-20 self-start rounded-lg border border-gray-200 bg-white p-6">
+                <FiltersSidebar
+                  priceRange={priceRange}
+                  setPriceRange={setPriceRange}
+                  ratingFilters={ratingFilters}
+                  setRatingFilters={setRatingFilters}
+                  clearFilters={clearFilters}
+                />
               </aside>
 
               <div className="flex-1">
