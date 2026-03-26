@@ -17,7 +17,7 @@ export const getProducts = async () => {
 
 export const getProductById = async (id) => {
   if (USE_MOCK_DATA) {
-    const product = productsData.find(p => p.id === id);
+    const product = productsData.find(p => p.id === Number(id));
     if (!product) {
       throw new Error(`Product with id ${id} not found`);
     }
