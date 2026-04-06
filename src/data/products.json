@@ -29,12 +29,23 @@
     "image": "https://images.unsplash.com/photo-1674303324806-7018a739ed11?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibHVldG9vdGglMjBzcGVha2VyJTIwcG9ydGFibGV8ZW58MXx8fHwxNzcxMTE2NTg4fDA&ixlib=rb-4.1.0&q=80&w=1080",
     "category": "Audio",
     "price": 129.99,
-    "rating": 3.5,
-    "number_of_reviews": 0,
-    "highlights": {},
-    "description": "",
-    "specifications": {},
-    "related": []
+    "rating": 4.5,
+    "number_of_reviews": 327,
+    "highlights": {
+      "Output Power": "20W",
+      "Battery Life": "15 hours",
+      "Water Rating": "IPX7"
+    },
+    "description": "Take your music anywhere with this powerful portable speaker. Delivers rich, immersive sound with deep bass. Waterproof design perfect for outdoor adventures and pool parties.",
+    "specifications": {
+      "Output Power": "20W",
+      "Battery Life": "15 hours",
+      "Water Rating": "IPX7",
+      "Connectivity": "Bluetooth 5.0",
+      "Weight": "450g",
+      "Charging Time": "3 hours"
+    },
+    "related": [1, 3]
   },
   {
     "id": 3,
