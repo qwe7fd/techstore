@@ -39,18 +39,15 @@ const ProductDetails = () => {
     );
   }
 
-  const breadcrumbItems = [
-    { label: 'Products', href: '/' },
-    { label: product?.category || 'Category', href: null },
-    { label: product?.name || 'Product', href: null }
-  ];
-
   return (
     <div className="flex min-h-screen flex-col">
     <Header/>
     <main className="flex-1">
       <div className="bg-gray-50 min-h-screen container mx-auto px-4 lg:px-8 py-8">
-        <Breadcrumbs items={breadcrumbItems} />
+        <Breadcrumbs 
+          category={product?.category}
+          productName={product?.name}
+        />
       </div>
     </main>
     <Footer/>
