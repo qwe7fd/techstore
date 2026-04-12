@@ -28,7 +28,7 @@ const Header = () => {
         <button className="flex h-10 w-10 items-center justify-center">
           <Search className="h-5 w-5"/>
         </button>
-        <a className="h-10 w-10 flex items-center justify-center">
+        <a href="/cart" className="h-10 w-10 flex items-center justify-center rounded-full text-gray-700 hover:bg-gray-100 transition-colors">
           <ShoppingCart className="h-5 w-5"/>
           {/*TODO: Иконка корзины с индикатором количества товаров (Badge). Счетчик обновляется в реальном времени при добавлении/удалении позиций. */}
         </a>
