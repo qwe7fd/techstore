@@ -202,6 +202,7 @@ const Catalog = () => {
                     {displayedProducts.map((product) => (
                       <ProductCard
                         key={product.id}
+                        id={product.id}
                         name={product.name}
                         image={product.image}
                         category={product.category}

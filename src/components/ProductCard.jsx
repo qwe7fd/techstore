@@ -1,6 +1,6 @@
 import { Star } from "lucide-react";
 
-const ProductCard = ({ name, image, category, price, rating }) => {
+const ProductCard = ({ id, name, image, category, price, rating }) => {
   const renderStars = () => {
     const stars = [];
     const fullStars = Math.floor(rating);
@@ -28,7 +28,7 @@ const ProductCard = ({ name, image, category, price, rating }) => {
   return (
     <a
       className="group block overflow-hidden rounded-lg border border-gray-200 bg-white hover:shadow-lg transition-shadow"
-      href="#"
+      href={`/product/${id}`}
     >
       <div className="aspect-square overflow-hidden bg-gray-100">
         <img 
