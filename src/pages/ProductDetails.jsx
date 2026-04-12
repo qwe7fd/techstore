@@ -68,6 +68,27 @@ const ProductDetails = () => {
     return stars;
   };
 
+  const handleAddToCart = () => {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    
+    const existingItemIndex = cart.findIndex(item => item.id === product.id);
+    
+    if (existingItemIndex > -1) {
+      cart[existingItemIndex].quantity += quantity;
+    } else {
+      cart.push({
+        id: product.id,
+        name: product.name,
+        image: product.image,
+        category: product.category,
+        price: product.price,
+        quantity: quantity
+      });
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+  };
+
   return (
     <div className="flex min-h-screen flex-col">
       <Header/>
@@ -179,7 +200,10 @@ const ProductDetails = () => {
                 </div>
               </div>
 
-              <button className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-4 font-semibold text-white hover:bg-blue-700 transition-colors">
+              <button 
+                onClick={handleAddToCart}
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-4 font-semibold text-white hover:bg-blue-700 transition-colors"
+              >
                 <ShoppingCart className="h-5 w-5" />
                 Add to Cart
               </button>
