@@ -1,6 +1,7 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Breadcrumbs from "../components/Breadcrumbs";
+import ProductCard from "../components/ProductCard";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getProductById } from "../services/productsService";
@@ -13,12 +14,20 @@ const ProductDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isSpecsOpen, setIsSpecsOpen] = useState(false);
+  const [relatedProducts, setRelatedProducts] = useState([]);
 
   useEffect(() => {
     const loadProduct = async () => {
       try {
         const data = await getProductById(id);
         setProduct(data);
+        
+        if (data?.related && data.related.length > 0) {
+          const relatedData = await Promise.all(
+            data.related.map(relatedId => getProductById(relatedId))
+          );
+          setRelatedProducts(relatedData.filter(p => p !== null));
+        }
       } catch (error) {
         console.error('Error loading product:', error);
       } finally {
@@ -200,6 +209,25 @@ const ProductDetails = () => {
               )}
             </div>
           </div>
+
+          {relatedProducts.length > 0 && (
+            <div>
+              <h2 className="mb-6 text-xl">Related Products</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {relatedProducts.map((relatedProduct) => (
+                  <ProductCard
+                    key={relatedProduct.id}
+                    id={relatedProduct.id}
+                    name={relatedProduct.name}
+                    image={relatedProduct.image}
+                    category={relatedProduct.category}
+                    price={relatedProduct.price}
+                    rating={relatedProduct.rating}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </main>
       <Footer/>

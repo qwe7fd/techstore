@@ -21,7 +21,7 @@
       "Weight": "250g",
       "Charging Time": "2 hours"
     },
-    "related": [2, 4]
+    "related": [2]
   },
   {
     "id": 2,
@@ -45,7 +45,7 @@
       "Weight": "450g",
       "Charging Time": "3 hours"
     },
-    "related": [1, 3]
+    "related": [1]
   },
   {
     "id": 3,
