@@ -2,10 +2,13 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Trash2, Minus, Plus } from "lucide-react";
+import { Trash2, Minus, Plus, Truck, MapPin } from "lucide-react";
 
 const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [promoCode, setPromoCode] = useState('');
+  const [discount, setDiscount] = useState(0);
+  const [promoMessage, setPromoMessage] = useState('');
 
   useEffect(() => {
     const loadCart = () => {
@@ -32,6 +35,27 @@ const Cart = () => {
     setCartItems(updatedCart);
     localStorage.setItem('cart', JSON.stringify(updatedCart));
     window.dispatchEvent(new Event('cartUpdated'));
+  };
+
+  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+  const discountAmount = subtotal * discount;
+  const tax = (subtotal - discountAmount) * 0.08;
+  const total = subtotal - discountAmount + tax;
+
+  const handleApplyPromo = () => {
+    const code = promoCode.trim().toUpperCase();
+    
+    const promoCodes = {
+      'SAVE10': { discount: 0.10, message: 'Promo code applied successfully!' }
+    };
+
+    if (promoCodes[code]) {
+      setDiscount(promoCodes[code].discount);
+      setPromoMessage(promoCodes[code].message);
+    } else {
+      setDiscount(0);
+      setPromoMessage('Invalid promo code');
+    }
   };
 
   return (
@@ -118,6 +142,86 @@ const Cart = () => {
                       </div>
                     </div>
                   ))}
+                </div>
+
+                <div className="lg:col-span-1">
+                  <div className="sticky top-24 space-y-4">
+                    <div className="rounded-lg border border-gray-200 bg-white p-6">
+                      <h2 className="mb-4 font-semibold">Order Summary</h2>
+                      <div className="space-y-3 mb-6">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-gray-600">Subtotal</span>
+                          <span className="font-semibold">${subtotal.toFixed(2)}</span>
+                        </div>
+                        {discount > 0 && (
+                          <div className="flex items-center justify-between text-sm">
+                            <span className="text-green-600">Discount ({(discount * 100).toFixed(0)}%)</span>
+                            <span className="font-semibold text-green-600">-${discountAmount.toFixed(2)}</span>
+                          </div>
+                        )}
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="text-gray-600">Tax (8%)</span>
+                          <span className="font-semibold">${tax.toFixed(2)}</span>
+                        </div>
+                        <div className="border-t border-gray-200 pt-3 flex items-center justify-between">
+                          <span className="font-semibold">Total</span>
+                          <span className="font-bold text-xl text-blue-600">${total.toFixed(2)}</span>
+                        </div>
+                      </div>
+                      <div className="mb-6">
+                        <label className="mb-2 block text-sm font-semibold">Promo Code</label>
+                        <div className="flex gap-2">
+                          <input 
+                            type="text" 
+                            placeholder="Enter code" 
+                            className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20" 
+                            value={promoCode}
+                            onChange={(e) => setPromoCode(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && handleApplyPromo()}
+                          />
+                          <button 
+                            onClick={handleApplyPromo}
+                            disabled={!promoCode.trim()}
+                            className="rounded-lg bg-gray-800 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            Apply
+                          </button>
+                        </div>
+                        {promoMessage && (
+                          <p className={`mt-2 text-xs ${promoMessage.includes('Invalid') ? 'text-red-600' : 'text-green-600'}`}>
+                            {promoMessage}
+                          </p>
+                        )}
+                        {!promoMessage && (
+                          <p className="mt-2 text-xs text-gray-500">Try code "SAVE10" for 10% off</p>
+                        )}
+                      </div>
+                      <button className="w-full rounded-lg bg-blue-600 px-6 py-4 font-semibold text-white hover:bg-blue-700 transition-colors">
+                        Proceed to Checkout
+                      </button>
+                    </div>
+                    <div className="rounded-lg border border-gray-200 bg-white p-6">
+                      <h3 className="mb-4 flex items-center gap-2 font-semibold">
+                        <Truck className="h-5 w-5 text-blue-600" />
+                        Shipping Information
+                      </h3>
+                      <div className="space-y-3 text-sm">
+                        <div className="flex items-start gap-2">
+                          <MapPin className="h-4 w-4 text-gray-400 mt-0.5" />
+                          <div>
+                            <p className="font-medium">Delivery Address</p>
+                            <p className="text-gray-600">123 Tech Street</p>
+                            <p className="text-gray-600">San Francisco, CA 94105</p>
+                          </div>
+                        </div>
+                        <div className="border-t border-gray-200 pt-3">
+                          <p className="font-medium">Estimated Delivery</p>
+                          <p className="text-gray-600">3-5 business days</p>
+                          <p className="text-green-600 mt-1">Free shipping on orders over $50</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
