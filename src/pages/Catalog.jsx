@@ -20,6 +20,7 @@ const Catalog = () => {
 
   const sortOptions = [
     { value: "name-asc", label: "Name (A-Z)" },
+    { value: "name-desc", label: "Name (Z-A)" },
     { value: "price-asc", label: "Price (Low to High)" },
     { value: "price-desc", label: "Price (High to Low)" }
   ];
@@ -42,8 +43,8 @@ const Catalog = () => {
       try {
         const data = await getProducts();
         setProducts(data);
-      } catch (error) {
-        console.error('Error loading products:', error);
+      } catch {
+        // silently handle error
       } finally {
         setLoading(false);
       }
@@ -74,6 +75,9 @@ const Catalog = () => {
     switch (sortBy) {
       case "name-asc":
         result.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "name-desc":
+        result.sort((a, b) => b.name.localeCompare(a.name));
         break;
       case "price-asc":
         result.sort((a, b) => a.price - b.price);
