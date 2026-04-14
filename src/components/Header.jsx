@@ -39,7 +39,7 @@ const Header = () => {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <a href="/" className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-to-br from-blue-600 to-purple-600">
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-linear-to-br from-blue-600 to-purple-600">
               <span className="font-bold text-white text-xl">T</span>
             </div>
             <span className="hidden font-bold text-xl sm:inline-block">TechStore</span>
@@ -64,7 +64,7 @@ const Header = () => {
             >
               <ShoppingCart className="h-5 w-5"/>
               {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 min-w-[20px] items-center justify-center rounded-full bg-blue-600 px-1 text-xs font-semibold text-white">
+                <span className="absolute -top-1 -right-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-blue-600 px-1 text-xs font-semibold text-white">
                   {cartCount}
                 </span>
               )}
