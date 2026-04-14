@@ -28,8 +28,8 @@ const ProductDetails = () => {
           );
           setRelatedProducts(relatedData.filter(p => p !== null));
         }
-      } catch (error) {
-        console.error('Error loading product:', error);
+      } catch {
+        // silently handle error
       } finally {
         setLoading(false);
       }

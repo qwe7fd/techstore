@@ -43,8 +43,8 @@ const Catalog = () => {
       try {
         const data = await getProducts();
         setProducts(data);
-      } catch (error) {
-        console.error('Error loading products:', error);
+      } catch {
+        // silently handle error
       } finally {
         setLoading(false);
       }
