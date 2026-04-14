@@ -1,6 +1,18 @@
-import { Star } from "lucide-react";
+import { Star, ShoppingCart } from "lucide-react";
 
 const ProductCard = ({ id, name, image, category, price, rating }) => {
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const existingIndex = cart.findIndex(item => item.id === id);
+    if (existingIndex > -1) {
+      cart[existingIndex].quantity += 1;
+    } else {
+      cart.push({ id, name, image, category, price, quantity: 1 });
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    window.dispatchEvent(new Event('cartUpdated'));
+  };
   const renderStars = () => {
     const stars = [];
     const fullStars = Math.floor(rating);
@@ -54,6 +66,14 @@ const ProductCard = ({ id, name, image, category, price, rating }) => {
           <span className="text-blue-600 text-lg font-bold">${price}</span>
           <span className="text-gray-500 text-xs uppercase">{category}</span>
         </div>
+
+        <button
+          onClick={handleAddToCart}
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
+        >
+          <ShoppingCart className="h-4 w-4" />
+          Add to Cart
+        </button>
       </div>
     </a>
   )
