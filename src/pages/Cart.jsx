@@ -107,7 +107,6 @@ const Cart = () => {
                             <button 
                               onClick={() => removeItem(item.id)}
                               className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-                              aria-label="Remove item"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
@@ -120,7 +119,6 @@ const Cart = () => {
                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
                               disabled={item.quantity <= 1}
                               className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                              aria-label="Decrease quantity"
                             >
                               <Minus className="h-3 w-3" />
                             </button>
@@ -128,7 +126,6 @@ const Cart = () => {
                             <button 
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
                               className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
-                              aria-label="Increase quantity"
                             >
                               <Plus className="h-3 w-3" />
                             </button>
