@@ -53,11 +53,22 @@
     "image": "https://images.unsplash.com/photo-1665860455418-017fa50d29bc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzbWFydHdhdGNoJTIwZml0bmVzcyUyMHRyYWNrZXJ8ZW58MXx8fHwxNzcxMTUyOTc0fDA&ixlib=rb-4.1.0&q=80&w=1080",
     "category": "Wearables",
     "price": 449.99,
-    "rating": 4,
-    "number_of_reviews": 0,
-    "highlights": {},
-    "description": "",
-    "specifications": {},
+    "rating": 4.5,
+    "number_of_reviews": 327,
+    "highlights": {
+      "Display": "1.9\" AMOLED",
+      "Battery Life": "7 days",
+      "Water Resistance": "50m"
+    },
+    "description": "Track your fitness goals with precision and style. Features advanced health monitoring, GPS tracking, and a vibrant always-on display. Water-resistant and built for active lifestyles.",
+    "specifications": {
+      "Display": "1.9\" AMOLED",
+      "Battery Life": "7 days",
+      "Water Resistance": "50m",
+      "GPS": "Built-in",
+      "Health Sensors": "Heart Rate, SpO2, ECG",
+      "Compatibility": "iOS & Android"
+    },
     "related": []
   },
   {
@@ -67,10 +78,21 @@
     "category": "Tablets",
     "price": 799.99,
     "rating": 4.5,
-    "number_of_reviews": 0,
-    "highlights": {},
-    "description": "",
-    "specifications": {},
+    "number_of_reviews": 327,
+    "highlights": {
+      "Display": "12.9\" Liquid Retina",
+      "Processor": "M2 Chip",
+      "Storage": "256GB"
+    },
+    "description": "Experience productivity and entertainment on a stunning display. This ultra-thin tablet features powerful performance, all-day battery, and support for stylus input. Perfect for work and play.",
+    "specifications": {
+      "Display": "12.9\" Liquid Retina",
+      "Processor": "M2 Chip",
+      "Storage": "256GB",
+      "RAM": "8GB",
+      "Battery": "10 hours",
+      "Stylus Support": "Yes"
+    },
     "related": []
   },
   {
@@ -79,11 +101,22 @@
     "image": "https://images.unsplash.com/photo-1532272278764-53cd1fe53f72?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjYW1lcmElMjBwaG90b2dyYXBoeSUyMHByb2Zlc3Npb25hbHxlbnwxfHx8fDE3NzExNDIxODN8MA&ixlib=rb-4.1.0&q=80&w=1080",
     "category": "Photography",
     "price": 2499.99,
-    "rating": 5,
-    "number_of_reviews": 0,
-    "highlights": {},
-    "description": "",
-    "specifications": {},
+    "rating": 4.5,
+    "number_of_reviews": 327,
+    "highlights": {
+      "Sensor": "45MP Full-Frame",
+      "Video": "4K 60fps",
+      "ISO Range": "100-51200"
+    },
+    "description": "Capture stunning images with this professional-grade DSLR camera. Features a full-frame sensor, 4K video recording, and exceptional low-light performance. Perfect for serious photographers and videographers.",
+    "specifications": {
+      "Sensor": "45MP Full-Frame",
+      "Video": "4K 60fps",
+      "ISO Range": "100-51200",
+      "Autofocus Points": "693",
+      "Burst Speed": "10 fps",
+      "Display": "3.2\" Tilting Touchscreen"
+    },
     "related": []
   },
   {
@@ -93,10 +126,21 @@
     "category": "Computers",
     "price": 1899.99,
     "rating": 4.5,
-    "number_of_reviews": 0,
-    "highlights": {},
-    "description": "",
-    "specifications": {},
+    "number_of_reviews": 327,
+    "highlights": {
+      "Processor": "Intel Core i9",
+      "RAM": "32GB DDR5",
+      "Storage": "1TB SSD"
+    },
+    "description": "Powerful performance meets sleek design in this professional laptop. Equipped with the latest processor, stunning display, and all-day battery life. Ideal for creative professionals and power users.",
+    "specifications": {
+      "Processor": "Intel Core i9",
+      "RAM": "32GB DDR5",
+      "Storage": "1TB SSD",
+      "Display": "15.6\" 4K OLED",
+      "Graphics": "NVIDIA RTX 4060",
+      "Battery": "12 hours"
+    },
     "related": []
   }
 ]
