@@ -9,6 +9,7 @@ const Cart = () => {
   const [promoCode, setPromoCode] = useState('');
   const [discount, setDiscount] = useState(0);
   const [promoMessage, setPromoMessage] = useState('');
+  const [appliedPromoCode, setAppliedPromoCode] = useState('');
 
   useEffect(() => {
     const loadCart = () => {
@@ -52,9 +53,11 @@ const Cart = () => {
     if (promoCodes[code]) {
       setDiscount(promoCodes[code].discount);
       setPromoMessage(promoCodes[code].message);
+      setAppliedPromoCode(code);
     } else {
       setDiscount(0);
       setPromoMessage('Invalid promo code');
+      setAppliedPromoCode('');
     }
   };
 
@@ -107,7 +110,6 @@ const Cart = () => {
                             <button 
                               onClick={() => removeItem(item.id)}
                               className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
-                              aria-label="Remove item"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
@@ -120,7 +122,6 @@ const Cart = () => {
                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
                               disabled={item.quantity <= 1}
                               className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                              aria-label="Decrease quantity"
                             >
                               <Minus className="h-3 w-3" />
                             </button>
@@ -128,7 +129,6 @@ const Cart = () => {
                             <button 
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
                               className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
-                              aria-label="Increase quantity"
                             >
                               <Plus className="h-3 w-3" />
                             </button>
@@ -147,7 +147,7 @@ const Cart = () => {
                 <div className="lg:col-span-1">
                   <div className="sticky top-24 space-y-4">
                     <div className="rounded-lg border border-gray-200 bg-white p-6">
-                      <h2 className="mb-4 font-semibold">Order Summary</h2>
+                      <h2 className="mb-4 font-semibold text-xl">Order Summary</h2>
                       <div className="space-y-3 mb-6">
                         <div className="flex items-center justify-between text-sm">
                           <span className="text-gray-600">Subtotal</span>
@@ -155,7 +155,7 @@ const Cart = () => {
                         </div>
                         {discount > 0 && (
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-green-600">Discount ({(discount * 100).toFixed(0)}%)</span>
+                            <span className="text-green-600">Discount ({appliedPromoCode})</span>
                             <span className="font-semibold text-green-600">-${discountAmount.toFixed(2)}</span>
                           </div>
                         )}
@@ -174,14 +174,14 @@ const Cart = () => {
                           <input 
                             type="text" 
                             placeholder="Enter code" 
-                            className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20" 
+                            className="flex-1 min-w-0 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20" 
                             value={promoCode}
                             onChange={(e) => setPromoCode(e.target.value)}
                           />
                           <button 
                             onClick={handleApplyPromo}
                             disabled={!promoCode.trim()}
-                            className="rounded-lg bg-gray-800 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="shrink-0 rounded-lg bg-gray-800 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             Apply
                           </button>
