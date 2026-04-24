@@ -1,16 +1,53 @@
-# React + Vite
+# TechStore
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Современный интернет-магазин электроники, построенный на React и Vite.
 
-Currently, two official plugins are available:
+## Возможности
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Каталог товаров с фильтрацией по цене и рейтингу
+- Сортировка товаров (по имени, цене)
+- Детальные страницы товаров с галереей изображений
+- Корзина покупок с сохранением в localStorage
+- Промокоды (попробуйте `SAVE10` для скидки 10%)
+- Адаптивный дизайн для всех устройств
+- Похожие товары на странице продукта
 
-## React Compiler
+## Технологии
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React 19.2.0
+- Vite 7.3.1
+- React Router 7.13.1
+- Tailwind CSS 4.1.18
+- Lucide React (иконки)
 
-## Expanding the ESLint configuration
+## Установка и запуск
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+# Установка зависимостей
+npm install
+
+# Запуск в режиме разработки
+npm run dev
+
+# Сборка для продакшена
+npm run build
+
+# Предпросмотр продакшен-сборки
+npm run preview
+```
+
+## Структура проекта
+
+```
+src/
+├── components/       # Переиспользуемые компоненты
+├── pages/           # Страницы приложения
+├── data/            # JSON данные товаров
+└── services/        # Сервисы для работы с данными
+```
+
+## Страницы
+
+- `/` - Каталог товаров
+- `/product/:id` - Детальная страница товара
+- `/cart` - Корзина покупок
