@@ -39,9 +39,10 @@ const Cart = () => {
   };
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const discountAmount = subtotal * discount;
-  const tax = (subtotal - discountAmount) * 0.08;
-  const total = subtotal - discountAmount + tax;
+  const tax = subtotal * 0.08;
+  const totalBeforeDiscount = subtotal + tax;
+  const discountAmount = totalBeforeDiscount * discount;
+  const total = totalBeforeDiscount - discountAmount;
 
   const handleApplyPromo = () => {
     const code = promoCode.trim().toUpperCase();
