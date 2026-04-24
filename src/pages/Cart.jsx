@@ -110,7 +110,7 @@ const Cart = () => {
                             </div>
                             <button 
                               onClick={() => removeItem(item.id)}
-                              className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors"
+                              className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer"
                             >
                               <Trash2 className="h-4 w-4" />
                             </button>
@@ -122,14 +122,14 @@ const Cart = () => {
                             <button 
                               onClick={() => updateQuantity(item.id, item.quantity - 1)}
                               disabled={item.quantity <= 1}
-                              className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                             >
                               <Minus className="h-3 w-3" />
                             </button>
                             <span className="w-8 text-center font-semibold">{item.quantity}</span>
                             <button 
                               onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+                              className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
                             >
                               <Plus className="h-3 w-3" />
                             </button>
@@ -182,7 +182,7 @@ const Cart = () => {
                           <button 
                             onClick={handleApplyPromo}
                             disabled={!promoCode.trim()}
-                            className="shrink-0 rounded-lg bg-gray-800 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="shrink-0 rounded-lg bg-gray-800 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                           >
                             Apply
                           </button>
@@ -196,7 +196,7 @@ const Cart = () => {
                           <p className="mt-2 text-xs text-gray-500">Try code "SAVE10" for 10% off</p>
                         )}
                       </div>
-                      <button className="w-full rounded-lg bg-blue-600 px-6 py-4 font-semibold text-white hover:bg-blue-700 transition-colors">
+                      <button className="w-full rounded-lg bg-blue-600 px-6 py-4 font-semibold text-white hover:bg-blue-700 transition-colors cursor-pointer">
                         Proceed to Checkout
                       </button>
                     </div>

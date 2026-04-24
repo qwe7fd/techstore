@@ -109,7 +109,7 @@ const Catalog = () => {
               <div className="flex items-center gap-2">
                 <button 
                   onClick={() => setIsFiltersOpen(true)}
-                  className="lg:hidden flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50 transition-colors"
+                  className="lg:hidden flex items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   <SlidersHorizontal className="h-4 w-4"/>
                   Filters
@@ -121,7 +121,7 @@ const Catalog = () => {
                 <div className="relative" ref={dropdownRef}>
                   <button
                     onClick={() => setIsOpen(!isOpen)}
-                    className="flex w-45 items-center justify-between rounded-md bg-white px-3 py-2 text-sm text-gray-900"
+                    className="flex w-45 items-center justify-between rounded-md bg-white px-3 py-2 text-sm text-gray-900 cursor-pointer"
                   >
                     <span className="font-semibold">{selectedOption?.label}</span>
                     <ChevronDown className="opacity-50 size-4"/>
@@ -136,7 +136,7 @@ const Catalog = () => {
                             setSortBy(option.value);
                             setIsOpen(false);
                           }}
-                          className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900 focus-visible:bg-gray-100 focus-visible:text-gray-900"
+                          className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900 focus-visible:bg-gray-100 focus-visible:text-gray-900 cursor-pointer"
                         >
                           <span className="font-medium">{option.label}</span>
                           {sortBy === option.value && (
@@ -165,7 +165,7 @@ const Catalog = () => {
                       </h2>
                       <button
                         onClick={() => setIsFiltersOpen(false)}
-                        className="text-gray-500 hover:text-gray-700"
+                        className="text-gray-500 hover:text-gray-700 cursor-pointer"
                       >
                         <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

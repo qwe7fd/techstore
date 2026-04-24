@@ -102,7 +102,7 @@ const FiltersSidebar = ({
 
       <button 
         onClick={clearFilters}
-        className="font-medium w-full rounded-lg border border-gray-300 px-4 py-2 text-sm hover:bg-gray-50 transition-colors">
+        className="font-medium w-full rounded-lg border border-gray-300 px-4 py-2 text-sm hover:bg-gray-50 transition-colors cursor-pointer">
         Clear All Filters
       </button>
     </div>

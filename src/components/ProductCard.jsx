@@ -69,7 +69,7 @@ const ProductCard = ({ id, name, image, category, price, rating }) => {
 
         <button
           onClick={handleAddToCart}
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors"
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors cursor-pointer"
         >
           <ShoppingCart className="h-4 w-4" />
           Add to Cart

@@ -54,7 +54,7 @@ const Header = () => {
 
           <div className="flex items-center gap-4">
             <button 
-              className="flex h-10 w-10 items-center justify-center rounded-full text-gray-700 hover:bg-gray-100 transition-colors"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-gray-700 hover:bg-gray-100 transition-colors cursor-pointer"
             >
               <Search className="h-5 w-5"/>
             </button>
@@ -71,7 +71,7 @@ const Header = () => {
             </a>
             <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="flex h-10 w-10 items-center justify-center rounded-full text-gray-700 hover:bg-gray-100 transition-colors md:hidden"
+              className="flex h-10 w-10 items-center justify-center rounded-full text-gray-700 hover:bg-gray-100 transition-colors md:hidden cursor-pointer"
             >
               <Menu className="h-5 w-5"/>
             </button>

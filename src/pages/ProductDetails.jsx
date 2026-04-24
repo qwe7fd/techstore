@@ -110,13 +110,13 @@ const ProductDetails = () => {
                 />
                 <button 
                   onClick={() => setCurrentImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1)}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-gray-800 shadow-lg hover:bg-white transition-colors"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-gray-800 shadow-lg hover:bg-white transition-colors cursor-pointer"
                 >
                   <ChevronLeft className="h-5 w-5" />
                 </button>
                 <button 
                   onClick={() => setCurrentImageIndex(prev => prev === images.length - 1 ? 0 : prev + 1)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-gray-800 shadow-lg hover:bg-white transition-colors"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-gray-800 shadow-lg hover:bg-white transition-colors cursor-pointer"
                 >
                   <ChevronRight className="h-5 w-5" />
                 </button>
@@ -127,7 +127,7 @@ const ProductDetails = () => {
                   <button 
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
-                    className={`flex-1 aspect-square overflow-hidden rounded-lg border-2 transition-all ${
+                    className={`flex-1 aspect-square overflow-hidden rounded-lg border-2 transition-all cursor-pointer ${
                       currentImageIndex === index 
                         ? 'border-blue-600 ring-2 ring-blue-600/20' 
                         : 'border-gray-200 hover:border-gray-300'
@@ -187,14 +187,14 @@ const ProductDetails = () => {
                 <div className="flex items-center gap-3">
                   <button 
                     onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-                    className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+                    className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
                   >
                     -
                   </button>
                   <span className="w-12 text-center font-semibold">{quantity}</span>
                   <button 
                     onClick={() => setQuantity(prev => prev + 1)}
-                    className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors"
+                    className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
                   >
                     +
                   </button>
@@ -203,7 +203,7 @@ const ProductDetails = () => {
 
               <button 
                 onClick={handleAddToCart}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-4 font-semibold text-white hover:bg-blue-700 transition-colors"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-4 font-semibold text-white hover:bg-blue-700 transition-colors cursor-pointer"
               >
                 <ShoppingCart className="h-5 w-5" />
                 Add to Cart
@@ -213,7 +213,7 @@ const ProductDetails = () => {
                 <div className="rounded-lg border border-gray-200 bg-white">
                   <button
                     onClick={() => setIsSpecsOpen(!isSpecsOpen)}
-                    className="flex w-full items-start justify-between gap-4 px-4 py-4 text-left text-sm font-medium transition-all hover:underline"
+                    className="flex w-full items-start justify-between gap-4 px-4 py-4 text-left text-sm font-medium transition-all hover:underline cursor-pointer"
                   >
                     Technical Specifications
                     <ChevronDown className={`h-4 w-4 text-gray-500 transition-transform duration-200 ${isSpecsOpen ? 'rotate-180' : ''}`} />

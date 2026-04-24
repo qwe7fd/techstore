@@ -61,7 +61,7 @@ const Footer = () => {
             <p className="text-sm text-gray-600 mb-4">Subscribe to get special offers, free giveaways, and updates.</p>
             <form className="space-y-2">
               <input className="w-full rounded-lg border border-gray-300 px-4 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200/60" type="email" placeholder="Enter your email" />
-              <button type="submit" className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 transition-colors">Subscribe</button>
+              <button type="submit" className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 transition-colors cursor-pointer">Subscribe</button>
             </form>
           </div>
         </div>
