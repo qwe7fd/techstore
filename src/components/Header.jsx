@@ -47,9 +47,9 @@ const Header = () => {
           
           <nav className="hidden md:flex items-center gap-8">
             <a href="/" className="text-gray-700 hover:text-blue-600 transition-colors">Products</a>
-            <a href="/categories" className="text-gray-700 hover:text-blue-600 transition-colors">Categories</a>
-            <a href="/deals" className="text-gray-700 hover:text-blue-600 transition-colors">Deals</a>
-            <a href="/about" className="text-gray-700 hover:text-blue-600 transition-colors">About</a>
+            <a href="#" onClick={(e) => e.preventDefault()} className="text-gray-700 hover:text-blue-600 transition-colors cursor-pointer">Categories</a>
+            <a href="#" onClick={(e) => e.preventDefault()} className="text-gray-700 hover:text-blue-600 transition-colors cursor-pointer">Deals</a>
+            <a href="#" onClick={(e) => e.preventDefault()} className="text-gray-700 hover:text-blue-600 transition-colors cursor-pointer">About</a>
           </nav>
 
           <div className="flex items-center gap-4">
@@ -81,9 +81,9 @@ const Header = () => {
         {isMobileMenuOpen && (
           <nav className="flex flex-col gap-4 pb-4 md:hidden border-t border-gray-200 pt-4">
             <a href="/" className="text-gray-700 hover:text-blue-600 transition-colors">Products</a>
-            <a href="/categories" className="text-gray-700 hover:text-blue-600 transition-colors">Categories</a>
-            <a href="/deals" className="text-gray-700 hover:text-blue-600 transition-colors">Deals</a>
-            <a href="/about" className="text-gray-700 hover:text-blue-600 transition-colors">About</a>
+            <a href="#" onClick={(e) => e.preventDefault()} className="text-gray-700 hover:text-blue-600 transition-colors cursor-pointer">Categories</a>
+            <a href="#" onClick={(e) => e.preventDefault()} className="text-gray-700 hover:text-blue-600 transition-colors cursor-pointer">Deals</a>
+            <a href="#" onClick={(e) => e.preventDefault()} className="text-gray-700 hover:text-blue-600 transition-colors cursor-pointer">About</a>
           </nav>
         )}
       </div>
