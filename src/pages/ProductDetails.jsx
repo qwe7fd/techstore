@@ -52,7 +52,9 @@ const ProductDetails = () => {
     );
   }
 
-  const images = [product?.image, product?.image, product?.image];
+  const images = product?.images?.length
+    ? product.images
+    : (product?.image ? [product.image] : []);
   
   const renderStars = (rating) => {
     const stars = [];
