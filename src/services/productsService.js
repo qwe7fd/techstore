@@ -1,32 +1,48 @@
-import productsData from '../data/products.json';
+const API_BASE_URL = 'https://techstore-api-mdzs.onrender.com/api';
 
-const USE_MOCK_DATA = true;
-const API_BASE_URL = 'https://api.example.com';
+// The API returns products as { title, images: [...] }, while the UI
+// historically works with { name, image }. mapProduct translates between them.
+const mapProduct = (product) => ({
+  id: product.id,
+  name: product.title,
+  image: product.images?.[0],
+  images: product.images ?? [],
+  category: product.category,
+  price: product.price,
+  rating: product.rating,
+  description: product.description,
+});
+
+let catalogCache = null;
+
+const fetchCatalog = async () => {
+  if (!catalogCache) {
+    const response = await fetch(`${API_BASE_URL}/products?limit=100`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch products');
+    }
+    const data = await response.json();
+    catalogCache = data.items.map(mapProduct);
+  }
+  return catalogCache;
+};
 
 export const getProducts = async () => {
-  if (USE_MOCK_DATA) {
-    return productsData;
-  }
-
-  const response = await fetch(`${API_BASE_URL}/products`);
-  if (!response.ok) {
-    throw new Error('Failed to fetch products');
-  }
-  return await response.json();
+  return await fetchCatalog();
 };
 
 export const getProductById = async (id) => {
-  if (USE_MOCK_DATA) {
-    const product = productsData.find(p => p.id === Number(id));
-    if (!product) {
-      throw new Error(`Product with id ${id} not found`);
-    }
-    return product;
+  const catalog = await fetchCatalog();
+  const product = catalog.find(p => p.id === Number(id));
+  if (!product) {
+    throw new Error(`Product with id ${id} not found`);
   }
 
-  const response = await fetch(`${API_BASE_URL}/products/${id}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch product ${id}`);
-  }
-  return await response.json();
+  // The UI shows same-category items as related products
+  const related = catalog
+    .filter(p => p.category === product.category && p.id !== product.id)
+    .slice(0, 3)
+    .map(p => p.id);
+
+  return { ...product, related };
 };
