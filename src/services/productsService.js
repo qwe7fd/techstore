@@ -59,3 +59,13 @@ export const getProductById = async (id) => {
 
   return { ...mapped, related };
 };
+
+// Admin endpoints — require a JWT with the admin role.
+export const createProduct = (dto) =>
+  apiFetch('/products', { method: 'POST', body: dto });
+
+export const updateProduct = (id, dto) =>
+  apiFetch(`/products/${id}`, { method: 'PATCH', body: dto });
+
+export const deleteProduct = (id) =>
+  apiFetch(`/products/${id}`, { method: 'DELETE' });

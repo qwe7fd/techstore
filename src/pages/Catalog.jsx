@@ -99,7 +99,7 @@ const Catalog = () => {
     };
 
     loadProducts();
-  }, [page, searchQuery, sortBy, priceQuery, ratingFilters, reloadTick]);
+  }, [page, searchQuery, sortBy, priceQuery, ratingFilters, reloadTick, minRating, selectedOption?.sort_by, selectedOption?.order]);
 
   const clearFilters = () => {
     setSearchInput("");
