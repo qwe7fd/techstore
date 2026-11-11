@@ -3,29 +3,46 @@ import Header from "../components/Header";
 import ProductCard from "../components/ProductCard";
 import Footer from "../components/Footer";
 import FiltersSidebar from "../components/FiltersSidebar";
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, Search } from "lucide-react";
 import { ChevronDown, Check } from "lucide-react";
 import { getProducts } from "../services/productsService";
+
+const PAGE_SIZE = 12;
 
 const Catalog = () => {
   const [sortBy, setSortBy] = useState("name-asc");
   const [isOpen, setIsOpen] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 3000]);
+  const [priceQuery, setPriceQuery] = useState([0, 3000]);
   const [ratingFilters, setRatingFilters] = useState({ 5: false, 4: false, 3: false });
+  const [searchInput, setSearchInput] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [page, setPage] = useState(1);
   const [products, setProducts] = useState([]);
+  const [meta, setMeta] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const [reloadTick, setReloadTick] = useState(0);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   const dropdownRef = useRef(null);
 
+  // sort_by/order values the API understands (whitelisted server-side)
   const sortOptions = [
-    { value: "name-asc", label: "Name (A-Z)" },
-    { value: "name-desc", label: "Name (Z-A)" },
-    { value: "price-asc", label: "Price (Low to High)" },
-    { value: "price-desc", label: "Price (High to Low)" }
+    { value: "name-asc", label: "Name (A-Z)", sort_by: "title", order: "asc" },
+    { value: "name-desc", label: "Name (Z-A)", sort_by: "title", order: "desc" },
+    { value: "price-asc", label: "Price (Low to High)", sort_by: "price", order: "asc" },
+    { value: "price-desc", label: "Price (High to Low)", sort_by: "price", order: "desc" }
   ];
 
   const selectedOption = sortOptions.find(opt => opt.value === sortBy);
+
+  // The checked ratings mean "5+, 4+, 3+" and a product passes when any
+  // applies — which is exactly rating >= the lowest checked value.
+  const activeRatings = Object.keys(ratingFilters)
+    .filter(key => ratingFilters[key])
+    .map(Number);
+  const minRating = activeRatings.length > 0 ? Math.min(...activeRatings) : undefined;
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -38,61 +55,59 @@ const Catalog = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Debounce the search box before it hits the API.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchQuery(searchInput);
+      setPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  // The price range slider fires continuously while dragging —
+  // debounce it too before querying the server.
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setPriceQuery(priceRange);
+      setPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [priceRange]);
+
   useEffect(() => {
     const loadProducts = async () => {
+      setLoading(true);
+      setLoadError("");
       try {
-        const data = await getProducts();
-        setProducts(data);
-      } catch {
-        // silently handle error
+        const data = await getProducts({
+          page,
+          limit: PAGE_SIZE,
+          search: searchQuery || undefined,
+          min_price: priceQuery[0] !== 0 ? priceQuery[0] : undefined,
+          max_price: priceQuery[1] !== 3000 ? priceQuery[1] : undefined,
+          min_rating: minRating,
+          sort_by: selectedOption?.sort_by,
+          order: selectedOption?.order,
+        });
+        setProducts(data.items);
+        setMeta(data.meta);
+      } catch (err) {
+        setLoadError(err.message || "Failed to load products");
       } finally {
         setLoading(false);
       }
     };
 
     loadProducts();
-  }, []);
+  }, [page, searchQuery, sortBy, priceQuery, ratingFilters, reloadTick]);
 
   const clearFilters = () => {
+    setSearchInput("");
     setPriceRange([0, 3000]);
+    setPriceQuery([0, 3000]);
     setRatingFilters({ 5: false, 4: false, 3: false });
+    setPage(1);
   }
-
-  const filteredAndSortedProducts = () => {
-    let result = [...products];
-
-    result = result.filter(product => 
-      product.price >= priceRange[0] && product.price <= priceRange[1]
-    );
-
-    const activeRatings = Object.keys(ratingFilters).filter(key => ratingFilters[key]);
-    if (activeRatings.length > 0) {
-      result = result.filter(product => {
-        return activeRatings.some(rating => product.rating >= Number(rating));
-      });
-    }
-
-    switch (sortBy) {
-      case "name-asc":
-        result.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case "name-desc":
-        result.sort((a, b) => b.name.localeCompare(a.name));
-        break;
-      case "price-asc":
-        result.sort((a, b) => a.price - b.price);
-        break;
-      case "price-desc":
-        result.sort((a, b) => b.price - a.price);
-        break;
-      default:
-        break;
-    }
-
-    return result;
-  };
-
-  const displayedProducts = filteredAndSortedProducts();
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -114,7 +129,19 @@ const Catalog = () => {
                   <SlidersHorizontal className="h-4 w-4"/>
                   Filters
                 </button>
-                <p className="text-sm text-gray-600">{displayedProducts.length} products</p>
+                <div className="relative w-full sm:w-64">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search products..."
+                    value={searchInput}
+                    onChange={(e) => setSearchInput(e.target.value)}
+                    className="w-full rounded-lg border border-gray-300 bg-white py-2 pl-9 pr-3 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20"
+                  />
+                </div>
+                {meta && (
+                  <p className="hidden text-sm text-gray-600 lg:block">{meta.total_items} products</p>
+                )}
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600">Sort by:</span>
@@ -134,6 +161,7 @@ const Catalog = () => {
                           key={option.value}
                           onClick={() => {
                             setSortBy(option.value);
+                            setPage(1);
                             setIsOpen(false);
                           }}
                           className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left text-sm text-gray-700 transition-colors hover:bg-gray-200 hover:text-gray-900 focus-visible:bg-gray-100 focus-visible:text-gray-900 cursor-pointer"
@@ -201,20 +229,64 @@ const Catalog = () => {
                   <div className="text-center py-12">
                     <p className="text-gray-600">Loading products...</p>
                   </div>
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {displayedProducts.map((product) => (
-                      <ProductCard
-                        key={product.id}
-                        id={product.id}
-                        name={product.name}
-                        image={product.image}
-                        category={product.category}
-                        price={product.price}
-                        rating={product.rating}
-                      />
-                    ))}
+                ) : loadError ? (
+                  <div className="rounded-lg border border-gray-200 bg-white p-12 text-center">
+                    <p className="mb-4 text-red-600">{loadError}</p>
+                    <button
+                      onClick={() => setReloadTick(t => t + 1)}
+                      className="rounded-lg border border-gray-300 px-6 py-2 text-sm font-medium hover:bg-gray-50 transition-colors cursor-pointer"
+                    >
+                      Retry
+                    </button>
                   </div>
+                ) : products.length === 0 ? (
+                  <div className="rounded-lg border border-gray-200 bg-white p-12 text-center">
+                    <p className="mb-2 text-lg font-semibold">No products match your filters</p>
+                    <p className="mb-6 text-sm text-gray-600">Try adjusting the search or clearing the filters.</p>
+                    <button
+                      onClick={clearFilters}
+                      className="rounded-lg bg-blue-600 px-6 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors cursor-pointer"
+                    >
+                      Clear Filters
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {products.map((product) => (
+                        <ProductCard
+                          key={product.id}
+                          id={product.id}
+                          name={product.name}
+                          image={product.image}
+                          category={product.category}
+                          price={product.price}
+                          rating={product.rating}
+                        />
+                      ))}
+                    </div>
+                    {meta && meta.total_pages > 1 && (
+                      <div className="mt-10 flex items-center justify-center gap-4">
+                        <button
+                          onClick={() => setPage(p => Math.max(1, p - 1))}
+                          disabled={page <= 1}
+                          className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                        >
+                          Previous
+                        </button>
+                        <span className="text-sm text-gray-600">
+                          Page {meta.current_page} of {meta.total_pages}
+                        </span>
+                        <button
+                          onClick={() => setPage(p => Math.min(meta.total_pages, p + 1))}
+                          disabled={page >= meta.total_pages}
+                          className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+                        >
+                          Next
+                        </button>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
