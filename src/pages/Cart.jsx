@@ -1,73 +1,150 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { Trash2, Minus, Plus, Truck, MapPin } from "lucide-react";
+import { getCurrentUser } from "../services/authService";
+import { getCart, updateItem, removeItem, applyPromo, emitCartChange } from "../services/cartService";
 
 const Cart = () => {
-  const [cartItems, setCartItems] = useState([]);
+  const navigate = useNavigate();
+  const [user, setUser] = useState(getCurrentUser());
+  const [cart, setCart] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+  const [actionError, setActionError] = useState('');
+  const [updatingItemId, setUpdatingItemId] = useState(null);
   const [promoCode, setPromoCode] = useState('');
-  const [discount, setDiscount] = useState(0);
+  const [promoResult, setPromoResult] = useState(null);
   const [promoMessage, setPromoMessage] = useState('');
-  const [appliedPromoCode, setAppliedPromoCode] = useState('');
+  const [applyingPromo, setApplyingPromo] = useState(false);
 
-  useEffect(() => {
-    const loadCart = () => {
-      const savedCart = localStorage.getItem('cart');
-      if (savedCart) {
-        setCartItems(JSON.parse(savedCart));
-      }
-    };
-    loadCart();
+  const loadCart = useCallback(async () => {
+    if (!getCurrentUser()) {
+      setCart(null);
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setLoadError('');
+    try {
+      const data = await getCart();
+      setCart(data);
+    } catch (err) {
+      setLoadError(err.message || 'Failed to load the cart');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const updateQuantity = (id, newQuantity) => {
-    if (newQuantity < 1) return;
-    const updatedCart = cartItems.map(item =>
-      item.id === id ? { ...item, quantity: newQuantity } : item
-    );
-    setCartItems(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    window.dispatchEvent(new Event('cartUpdated'));
-  };
+  useEffect(() => {
+    loadCart();
 
-  const removeItem = (id) => {
-    const updatedCart = cartItems.filter(item => item.id !== id);
-    setCartItems(updatedCart);
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    window.dispatchEvent(new Event('cartUpdated'));
-  };
-
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const tax = subtotal * 0.08;
-  const totalBeforeDiscount = subtotal + tax;
-  const discountAmount = totalBeforeDiscount * discount;
-  const total = totalBeforeDiscount - discountAmount;
-
-  const handleApplyPromo = () => {
-    const code = promoCode.trim().toUpperCase();
-    
-    const promoCodes = {
-      'SAVE10': { discount: 0.10, message: 'Promo code applied successfully!' }
+    const handleAuthChange = () => {
+      setUser(getCurrentUser());
+      loadCart();
     };
 
-    if (promoCodes[code]) {
-      setDiscount(promoCodes[code].discount);
-      setPromoMessage(promoCodes[code].message);
-      setAppliedPromoCode(code);
-    } else {
-      setDiscount(0);
-      setPromoMessage('Invalid promo code');
-      setAppliedPromoCode('');
+    window.addEventListener('authUpdated', handleAuthChange);
+    return () => window.removeEventListener('authUpdated', handleAuthChange);
+  }, [loadCart]);
+
+  const forgetPromo = () => {
+    setPromoResult(null);
+    setPromoMessage('');
+  };
+
+  const handleUpdateQuantity = async (item, newQuantity) => {
+    if (newQuantity < 1) return;
+    setActionError('');
+    setUpdatingItemId(item.id);
+    try {
+      const data = await updateItem(item.id, newQuantity);
+      setCart(data);
+      emitCartChange();
+      forgetPromo();
+    } catch (err) {
+      setActionError(err.message || 'Failed to update quantity');
+    } finally {
+      setUpdatingItemId(null);
     }
   };
+
+  const handleRemove = async (itemId) => {
+    setActionError('');
+    try {
+      await removeItem(itemId);
+      emitCartChange();
+      const data = await getCart();
+      setCart(data);
+      forgetPromo();
+    } catch (err) {
+      setActionError(err.message || 'Failed to remove the item');
+    }
+  };
+
+  const handleApplyPromo = async () => {
+    setApplyingPromo(true);
+    setPromoMessage('');
+    try {
+      const result = await applyPromo(promoCode);
+      setPromoResult(result);
+      setPromoMessage('Promo code applied successfully!');
+    } catch (err) {
+      setPromoResult(null);
+      setPromoMessage(err.message || 'Invalid promo code');
+    } finally {
+      setApplyingPromo(false);
+    }
+  };
+
+  // Totals come from the API: the cart carries subtotal, apply-promo
+  // recalculates it with the discount (nothing is stored server-side).
+  const subtotal = promoResult ? promoResult.subtotal : (cart?.subtotal ?? 0);
+  const discountAmount = promoResult ? promoResult.discount_amount : 0;
+  const total = promoResult ? promoResult.total : (cart?.subtotal ?? 0);
 
   return (
     <div className="flex min-h-screen flex-col">
       <Header/>
       <main className="flex-1">
         <div className="bg-gray-50 min-h-screen">
-          {cartItems.length === 0 ? (
+          {!user ? (
+            <div className="container mx-auto px-4 lg:px-8 py-16">
+              <div className="text-center">
+                <h1 className="mb-4 text-2xl">Sign in to view your cart</h1>
+                <p className="mb-8 text-gray-600">Your cart is saved to your account and follows you across devices.</p>
+                <button 
+                  onClick={() => navigate('/login')}
+                  className="inline-block rounded-lg bg-blue-600 px-8 py-3 font-semibold text-white hover:bg-blue-700 transition-colors cursor-pointer"
+                >
+                  Sign In
+                </button>
+                <p className="mt-4 text-sm text-gray-600">
+                  New here?{" "}
+                  <Link to="/register" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+                    Create an account
+                  </Link>
+                </p>
+              </div>
+            </div>
+          ) : loading ? (
+            <div className="container mx-auto px-4 lg:px-8 py-16">
+              <p className="text-center text-gray-600">Loading cart...</p>
+            </div>
+          ) : loadError ? (
+            <div className="container mx-auto px-4 lg:px-8 py-16">
+              <div className="text-center">
+                <p className="mb-4 text-red-600">{loadError}</p>
+                <button 
+                  onClick={loadCart}
+                  className="rounded-lg border border-gray-300 px-6 py-2 text-sm font-medium hover:bg-gray-50 transition-colors cursor-pointer"
+                >
+                  Retry
+                </button>
+              </div>
+            </div>
+          ) : !cart || cart.items.length === 0 ? (
             <div className="container mx-auto px-4 lg:px-8 py-16">
               <div className="text-center">
                 <h1 className="mb-4 text-2xl">Your Cart is Empty</h1>
@@ -84,14 +161,20 @@ const Cart = () => {
             <div className="container mx-auto px-4 lg:px-8 py-8">
               <h1 className="mb-8 text-2xl font-semibold">Shopping Cart</h1>
 
+              {actionError && (
+                <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600">
+                  {actionError}
+                </div>
+              )}
+
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <div className="lg:col-span-2 space-y-4">
-                  {cartItems.map((item) => (
+                  {cart.items.map((item) => (
                     <div key={item.id} className="flex flex-col sm:flex-row gap-4 rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
                       <div className="w-full sm:w-32 h-32 shrink-0 overflow-hidden rounded-lg bg-gray-100">
                         <img 
-                          src={item.image} 
-                          alt={item.name} 
+                          src={item.product.images?.[0]} 
+                          alt={item.product.title} 
                           className="h-full w-full object-cover"
                         />
                       </div>
@@ -101,15 +184,15 @@ const Cart = () => {
                           <div className="flex items-start justify-between gap-4">
                             <div>
                               <Link 
-                                to={`/product/${item.id}`}
+                                to={`/product/${item.product.id}`}
                                 className="font-semibold hover:text-blue-600 transition-colors"
                               >
-                                {item.name}
+                                {item.product.title}
                               </Link>
-                              <p className="mt-1 text-sm text-gray-500">{item.category}</p>
+                              <p className="mt-1 text-sm text-gray-500">${item.product.price.toFixed(2)} each</p>
                             </div>
                             <button 
-                              onClick={() => removeItem(item.id)}
+                              onClick={() => handleRemove(item.id)}
                               className="flex h-8 w-8 items-center justify-center rounded-full text-gray-400 hover:bg-red-50 hover:text-red-600 transition-colors cursor-pointer"
                             >
                               <Trash2 className="h-4 w-4" />
@@ -120,24 +203,25 @@ const Cart = () => {
                         <div className="flex items-center justify-between mt-4">
                           <div className="flex items-center gap-3">
                             <button 
-                              onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                              disabled={item.quantity <= 1}
+                              onClick={() => handleUpdateQuantity(item, item.quantity - 1)}
+                              disabled={item.quantity <= 1 || updatingItemId === item.id}
                               className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                             >
                               <Minus className="h-3 w-3" />
                             </button>
                             <span className="w-8 text-center font-semibold">{item.quantity}</span>
                             <button 
-                              onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                              className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
+                              onClick={() => handleUpdateQuantity(item, item.quantity + 1)}
+                              disabled={item.quantity >= item.product.stock_quantity || updatingItemId === item.id}
+                              className="flex h-8 w-8 items-center justify-center rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                             >
                               <Plus className="h-3 w-3" />
                             </button>
                           </div>
                           
                           <div className="text-right">
-                            <p className="font-bold text-lg text-blue-600">${(item.price * item.quantity).toFixed(2)}</p>
-                            <p className="text-xs text-gray-500">${item.price.toFixed(2)} each</p>
+                            <p className="font-bold text-lg text-blue-600">${(item.product.price * item.quantity).toFixed(2)}</p>
+                            <p className="text-xs text-gray-500">{item.product.stock_quantity} in stock</p>
                           </div>
                         </div>
                       </div>
@@ -154,25 +238,22 @@ const Cart = () => {
                           <span className="text-gray-600">Subtotal</span>
                           <span className="font-semibold">${subtotal.toFixed(2)}</span>
                         </div>
-                        {discount > 0 && (
+                        {promoResult && (
                           <div className="flex items-center justify-between text-sm">
-                            <span className="text-green-600">Discount ({appliedPromoCode})</span>
+                            <span className="text-green-600">Discount ({promoResult.promo_code}, {promoResult.discount_percentage}%)</span>
                             <span className="font-semibold text-green-600">-${discountAmount.toFixed(2)}</span>
                           </div>
                         )}
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-600">Tax (8%)</span>
-                          <span className="font-semibold">${tax.toFixed(2)}</span>
-                        </div>
                         <div className="border-t border-gray-200 pt-3 flex items-center justify-between">
                           <span className="font-semibold">Total</span>
                           <span className="font-bold text-xl text-blue-600">${total.toFixed(2)}</span>
                         </div>
                       </div>
                       <div className="mb-6">
-                        <label className="mb-2 block text-sm font-semibold">Promo Code</label>
+                        <label htmlFor="promoCode" className="mb-2 block text-sm font-semibold">Promo Code</label>
                         <div className="flex gap-2">
                           <input 
+                            id="promoCode"
                             type="text" 
                             placeholder="Enter code" 
                             className="flex-1 min-w-0 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-600/20" 
@@ -181,14 +262,14 @@ const Cart = () => {
                           />
                           <button 
                             onClick={handleApplyPromo}
-                            disabled={!promoCode.trim()}
+                            disabled={!promoCode.trim() || applyingPromo}
                             className="shrink-0 rounded-lg bg-gray-800 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-900 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
                           >
                             Apply
                           </button>
                         </div>
                         {promoMessage && (
-                          <p className={`mt-2 text-xs ${promoMessage.includes('Invalid') ? 'text-red-600' : 'text-green-600'}`}>
+                          <p className={`mt-2 text-xs ${promoMessage.includes('Invalid') || promoMessage.includes('Failed') ? 'text-red-600' : 'text-green-600'}`}>
                             {promoMessage}
                           </p>
                         )}

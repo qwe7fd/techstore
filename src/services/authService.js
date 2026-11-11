@@ -1,4 +1,5 @@
 import { apiFetch, getToken } from './apiClient';
+import { migrateLocalCart } from './cartService';
 
 const TOKEN_KEY = 'techstore_token';
 const USER_KEY = 'techstore_user';
@@ -27,6 +28,8 @@ export const login = async (email, password) => {
     auth: false,
   });
   persistSession(data.accessToken, data.user);
+  // Move anything left in the legacy localStorage cart into the API cart.
+  void migrateLocalCart();
   return data.user;
 };
 

@@ -2,6 +2,7 @@ import { Search, ShoppingCart, Menu, User, LogOut } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { getCurrentUser, logout } from "../services/authService"
+import { getCart } from "../services/cartService"
 
 const Header = () => {
   const [cartCount, setCartCount] = useState(0);
@@ -13,26 +14,29 @@ const Header = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const updateCartCount = () => {
-      const savedCart = localStorage.getItem('cart');
-      if (savedCart) {
-        const cartItems = JSON.parse(savedCart);
-        const totalCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-        setCartCount(totalCount);
-      } else {
+    // The cart lives on the API and needs an account: guests have no badge.
+    const updateCartCount = async () => {
+      if (!getCurrentUser()) {
         setCartCount(0);
+        return;
+      }
+      try {
+        const cart = await getCart();
+        setCartCount(cart.items_count);
+      } catch {
+        // keep the last known count; the cart page surfaces errors
       }
     };
 
     const handleAuthChange = () => {
       setUser(getCurrentUser());
       setIsUserMenuOpen(false);
+      updateCartCount();
     };
 
-    const handleStorageChange = (e) => {
-      if (e.key === 'cart') {
-        updateCartCount();
-      }
+    const handleStorageChange = () => {
+      setUser(getCurrentUser());
+      updateCartCount();
     };
 
     updateCartCount();

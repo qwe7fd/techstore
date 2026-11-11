@@ -3,14 +3,19 @@ import Footer from "../components/Footer";
 import Breadcrumbs from "../components/Breadcrumbs";
 import ProductCard from "../components/ProductCard";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getProductById } from "../services/productsService";
+import { getCurrentUser } from "../services/authService";
+import { addToCart, emitCartChange } from "../services/cartService";
 import { ChevronLeft, ChevronRight, Star, StarHalf, ShoppingCart, ChevronDown } from "lucide-react";
 
 const ProductDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [adding, setAdding] = useState(false);
+  const [cartError, setCartError] = useState('');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const [isSpecsOpen, setIsSpecsOpen] = useState(false);
@@ -70,26 +75,22 @@ const ProductDetails = () => {
     return stars;
   };
 
-  const handleAddToCart = () => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    
-    const existingItemIndex = cart.findIndex(item => item.id === product.id);
-    
-    if (existingItemIndex > -1) {
-      cart[existingItemIndex].quantity += quantity;
-    } else {
-      cart.push({
-        id: product.id,
-        name: product.name,
-        image: product.image,
-        category: product.category,
-        price: product.price,
-        quantity: quantity
-      });
+  const handleAddToCart = async () => {
+    // The cart lives on the API — it needs an account.
+    if (!getCurrentUser()) {
+      navigate('/login');
+      return;
     }
-    
-    localStorage.setItem('cart', JSON.stringify(cart));
-    window.dispatchEvent(new Event('cartUpdated'));
+    setCartError('');
+    setAdding(true);
+    try {
+      await addToCart(product, quantity);
+      emitCartChange();
+    } catch (err) {
+      setCartError(err.message || 'Failed to add to cart');
+    } finally {
+      setAdding(false);
+    }
   };
 
   return (
@@ -205,11 +206,15 @@ const ProductDetails = () => {
 
               <button 
                 onClick={handleAddToCart}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-4 font-semibold text-white hover:bg-blue-700 transition-colors cursor-pointer"
+                disabled={adding}
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-8 py-4 font-semibold text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
               >
                 <ShoppingCart className="h-5 w-5" />
-                Add to Cart
+                {adding ? 'Adding...' : 'Add to Cart'}
               </button>
+              {cartError && (
+                <p className="text-sm text-red-600">{cartError}</p>
+              )}
 
               {product?.specifications && Object.keys(product.specifications).length > 0 && (
                 <div className="rounded-lg border border-gray-200 bg-white">
