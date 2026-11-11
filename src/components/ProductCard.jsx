@@ -1,17 +1,31 @@
 import { Star, ShoppingCart } from "lucide-react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getCurrentUser } from "../services/authService";
+import { addToCart, emitCartChange } from "../services/cartService";
 
 const ProductCard = ({ id, name, image, category, price, rating }) => {
-  const handleAddToCart = (e) => {
+  const navigate = useNavigate();
+  const [adding, setAdding] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleAddToCart = async (e) => {
     e.preventDefault();
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingIndex = cart.findIndex(item => item.id === id);
-    if (existingIndex > -1) {
-      cart[existingIndex].quantity += 1;
-    } else {
-      cart.push({ id, name, image, category, price, quantity: 1 });
+    // The cart lives on the API — it needs an account.
+    if (!getCurrentUser()) {
+      navigate('/login');
+      return;
     }
-    localStorage.setItem('cart', JSON.stringify(cart));
-    window.dispatchEvent(new Event('cartUpdated'));
+    setError('');
+    setAdding(true);
+    try {
+      await addToCart({ id }, 1);
+      emitCartChange();
+    } catch (err) {
+      setError(err.message || 'Failed to add to cart');
+    } finally {
+      setAdding(false);
+    }
   };
   const renderStars = () => {
     const stars = [];
@@ -69,11 +83,13 @@ const ProductCard = ({ id, name, image, category, price, rating }) => {
 
         <button
           onClick={handleAddToCart}
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors cursor-pointer"
+          disabled={adding}
+          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
         >
           <ShoppingCart className="h-4 w-4" />
-          Add to Cart
+          {adding ? 'Adding...' : 'Add to Cart'}
         </button>
+        {error && <p className="mt-2 text-xs text-red-600">{error}</p>}
       </div>
     </a>
   )

@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://techstore-api-mdzs.onrender.com/api';
+import { apiFetch } from './apiClient';
 
 // The API returns products as { title, images: [...] }, while the UI
 // historically works with { name, image }. mapProduct translates between them.
@@ -11,38 +11,61 @@ const mapProduct = (product) => ({
   price: product.price,
   rating: product.rating,
   description: product.description,
+  stock_quantity: product.stockQuantity,
 });
 
+// Full catalog snapshot kept only for related-product lookups —
+// the API has no dedicated endpoint for them.
 let catalogCache = null;
 
 const fetchCatalog = async () => {
   if (!catalogCache) {
-    const response = await fetch(`${API_BASE_URL}/products?limit=100`);
-    if (!response.ok) {
-      throw new Error('Failed to fetch products');
-    }
-    const data = await response.json();
-    catalogCache = data.items.map(mapProduct);
+    const response = await apiFetch('/products?limit=100', { auth: false });
+    catalogCache = response.items.map(mapProduct);
   }
   return catalogCache;
 };
 
-export const getProducts = async () => {
-  return await fetchCatalog();
+// Search, filters, sorting and pagination are all executed by the API.
+export const getProducts = async (params = {}) => {
+  const query = new URLSearchParams();
+  if (params.page !== undefined) query.set('page', String(params.page));
+  if (params.limit !== undefined) query.set('limit', String(params.limit));
+  if (params.search) query.set('search', params.search);
+  if (params.min_price !== undefined) query.set('min_price', String(params.min_price));
+  if (params.max_price !== undefined) query.set('max_price', String(params.max_price));
+  if (params.min_rating !== undefined) query.set('min_rating', String(params.min_rating));
+  if (params.sort_by) query.set('sort_by', params.sort_by);
+  if (params.order) query.set('order', params.order);
+
+  const path = `/products${query.toString() ? `?${query}` : ''}`;
+  const response = await apiFetch(path, { auth: false });
+  return {
+    items: response.items.map(mapProduct),
+    meta: response.meta,
+  };
 };
 
 export const getProductById = async (id) => {
+  const product = await apiFetch(`/products/${id}`, { auth: false });
+  const mapped = mapProduct(product);
   const catalog = await fetchCatalog();
-  const product = catalog.find(p => p.id === Number(id));
-  if (!product) {
-    throw new Error(`Product with id ${id} not found`);
-  }
 
   // The UI shows same-category items as related products
   const related = catalog
-    .filter(p => p.category === product.category && p.id !== product.id)
+    .filter(p => p.category === mapped.category && p.id !== mapped.id)
     .slice(0, 3)
     .map(p => p.id);
 
-  return { ...product, related };
+  return { ...mapped, related };
 };
+
+// Admin endpoints — require a JWT with the admin role.
+export const createProduct = (dto) =>
+  apiFetch('/products', { method: 'POST', body: dto });
+
+export const updateProduct = (id, dto) =>
+  apiFetch(`/products/${id}`, { method: 'PATCH', body: dto });
+
+export const deleteProduct = (id) =>
+  apiFetch(`/products/${id}`, { method: 'DELETE' });
