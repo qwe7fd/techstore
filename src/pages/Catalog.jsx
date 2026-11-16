@@ -68,7 +68,11 @@ const Catalog = () => {
   // debounce it too before querying the server.
   useEffect(() => {
     const timer = setTimeout(() => {
-      setPriceQuery(priceRange);
+      // value-compare: a new array reference with the same numbers
+      // must not trigger a pointless refetch (the mount-time flicker)
+      setPriceQuery((prev) =>
+        prev[0] === priceRange[0] && prev[1] === priceRange[1] ? prev : priceRange,
+      );
       setPage(1);
     }, 400);
     return () => clearTimeout(timer);
